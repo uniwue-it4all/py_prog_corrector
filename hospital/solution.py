@@ -52,7 +52,6 @@ class Krankenhaus:
         self.stationen = stationen
 
     def durchschnitt_alter_patienten(self):
-        # {1}
         gesamt_alter: int = 0
         anzahl_patienten: int = 0
 
