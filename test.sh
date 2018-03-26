@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
-docker build -t beyselein/pytester_new .
+# Create file results.json if file not exists!
+if [[ ! -f ./results.json ]]; then
+    touch results.json
+fi
+
+# TODO: maybe check if files exist?
 
 docker run -it --rm --name test_pytest \
-    -v ~/workspace/hospital/classes.py:/data/classes.py \
-    -v ~/workspace/hospital/converter.py:/data/converter.py \
-    -v ~/workspace/hospital/solution.py:/data/solution.py \
-    -v ~/workspace/hospital/testdata.json:/data/testdata.json \
+    -v "$PWD"/test_main.py:/data/test_main.py \
+    -v "$PWD"/solution.py:/data/solution.py \
+    -v "$PWD"/testdata.json:/data/testdata.json \
+    -v "$PWD"/results.json:/data/results.json \
     beyselein/pytester_new

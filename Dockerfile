@@ -10,5 +10,4 @@ ADD main.py $WorkDir/main.py
 
 WORKDIR $WorkDir
 
-#ENTRYPOINT ["cat", "converter.py"]
 ENTRYPOINT ["python", "main.py"]
