@@ -12,4 +12,4 @@ docker run -it --rm --name test_pytest \
     -v "$PWD"/solution.py:/data/solution.py \
     -v "$PWD"/testdata.json:/data/testdata.json \
     -v "$PWD"/results.json:/data/results.json \
-    beyselein/pytester_new
+    beyselein/python_prog_tester
