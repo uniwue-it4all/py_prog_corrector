@@ -4,7 +4,8 @@ import json
 from io import StringIO
 import sys
 
-from hospital.test_main import test, convert_input
+# noinspection PyUnresolvedReferences
+from test_main import test, convert_input
 
 if __name__ == '__main__':
     testdata_file_name = 'testdata.json'
