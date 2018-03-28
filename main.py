@@ -43,7 +43,7 @@ if __name__ == '__main__':
                 'input': input_json,
                 'awaited_output': awaited_output,
                 'gotten_output': gotten_output,
-                'correct': result_type,
+                'success': result_type,
                 'stdout': test_stdout.getvalue()
             }
 
