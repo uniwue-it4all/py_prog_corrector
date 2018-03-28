@@ -11,5 +11,3 @@ ADD main.py $WorkDir/main.py
 WORKDIR $WorkDir
 
 ENTRYPOINT ["timeout", "-t", "2", "python", "main.py"]
-
-#ENTRYPOINT ["sh"]

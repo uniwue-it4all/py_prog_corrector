@@ -33,10 +33,10 @@ if __name__ == '__main__':
             # noinspection PyBroadException
             try:
                 (gotten_output, correctness) = test(converted_input, awaited_output)
-                result_type = 'SUCCESS' if correctness else 'NONE'
+                result_type = 'COMPLETE' if correctness else 'NONE'
             except Exception:
                 gotten_output = traceback.print_exc()
-                result_type = 'FAILURE'
+                result_type = 'ERROR'
 
             test_result = {
                 'id': test_id,
