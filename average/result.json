@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "input": {
+      "my_list": []
+    },
+    "awaited_output": "Fehler",
+    "gotten_output": "Fehler",
+    "correct": "SUCCESS",
+    "stdout": ""
+  },
+  {
+    "id": 2,
+    "input": {
+      "my_list": [
+        1
+      ]
+    },
+    "awaited_output": 1,
+    "gotten_output": 1.0,
+    "correct": "SUCCESS",
+    "stdout": ""
+  },
+  {
+    "id": 3,
+    "input": {
+      "my_list": [
+        3,
+        5,
+        7
+      ]
+    },
+    "awaited_output": 5,
+    "gotten_output": 5.0,
+    "correct": "SUCCESS",
+    "stdout": ""
+  }
+]

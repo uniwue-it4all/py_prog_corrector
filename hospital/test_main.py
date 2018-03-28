@@ -1,12 +1,14 @@
 # noinspection PyUnresolvedReferences
 from solution import Patient, Station, Krankenhaus
 
+epsilon = 1e-3
+
 
 def convert_input(input_json):
     stations = []
 
     # Instantiate all stations
-    for (stations_index, alter_liste_station) in enumerate(input_json):
+    for (stations_index, alter_liste_station) in enumerate(input_json['krankenhaus']):
         patients_on_station = []
 
         # Instantiate all patients on station
@@ -23,4 +25,6 @@ def convert_input(input_json):
 def test(hospital, awaited_output):
     gotten_output = hospital.durchschnitt_alter_patienten()
 
-    return gotten_output, gotten_output == awaited_output
+    correctness = abs(gotten_output - awaited_output) < epsilon
+
+    return gotten_output, correctness

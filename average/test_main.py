@@ -1,9 +1,21 @@
+from typing import Any
+
 # noinspection PyUnresolvedReferences
 from solution import average
 
-def convert_input(input_json):
-    return input_json
+epsilon = 1e-3
 
-def test(my_list, awaited_output):
+
+def convert_input(input_json):
+    return input_json['my_list']
+
+
+def test(my_list, awaited_output) -> (Any, bool):
     gotten_output = average(my_list)
-    return gotten_output, gotten_output == awaited_output
+
+    if isinstance(awaited_output, str) or isinstance(gotten_output, str):
+        correctness = gotten_output == awaited_output
+    else:
+        correctness = abs(gotten_output - awaited_output) < epsilon
+
+    return gotten_output, correctness

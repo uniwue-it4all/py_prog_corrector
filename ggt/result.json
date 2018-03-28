@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "input": {
+      "a": 12,
+      "b": 4
+    },
+    "awaited_output": 4,
+    "gotten_output": 4,
+    "correct": "SUCCESS",
+    "stdout": ""
+  },
+  {
+    "id": 2,
+    "input": {
+      "a": 3,
+      "b": 7
+    },
+    "awaited_output": 1,
+    "gotten_output": 1,
+    "correct": "SUCCESS",
+    "stdout": ""
+  },
+  {
+    "id": 3,
+    "input": {
+      "a": 64,
+      "b": 46
+    },
+    "awaited_output": 2,
+    "gotten_output": 2,
+    "correct": "SUCCESS",
+    "stdout": ""
+  },
+  {
+    "id": 4,
+    "input": {
+      "a": 777,
+      "b": 11
+    },
+    "awaited_output": 11,
+    "gotten_output": 1,
+    "correct": "NONE",
+    "stdout": ""
+  },
+  {
+    "id": 5,
+    "input": {
+      "a": 15,
+      "b": 25
+    },
+    "awaited_output": 5,
+    "gotten_output": 5,
+    "correct": "SUCCESS",
+    "stdout": ""
+  }
+]

@@ -55,8 +55,6 @@ class Krankenhaus:
         gesamt_alter: int = 0
         anzahl_patienten: int = 0
 
-        print(len(self.stationen))
-
         for station in self.stationen:
             for patient in station.patienten:
                 gesamt_alter += patient.alter
