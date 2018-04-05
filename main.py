@@ -18,8 +18,8 @@ if __name__ == '__main__':
         function_name = complete_test_data['functionname']
 
         base_data = None
-        if 'basedata' in complete_test_data:
-            base_data = convert_base_data(complete_test_data['basedata'])
+        if 'baseData' in complete_test_data:
+            base_data = convert_base_data(complete_test_data['baseData'])
 
         results = []
 

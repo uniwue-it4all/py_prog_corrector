@@ -1,6 +1,6 @@
 {
   "functionname": "average",
-  "basedata": {
+  "baseData": {
     "customers": [
       {"number": 0, "first_name": "Jack", "family_name": "Bauer"},
       {"number": 1, "first_name": "Jason", "family_name": "Bourne"},
