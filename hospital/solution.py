@@ -47,6 +47,7 @@ class Station:
         self.patienten = patienten
 
 
+# {1}
 class Krankenhaus:
     def __init__(self, stationen: List[Station]):
         self.stationen = stationen
@@ -64,4 +65,4 @@ class Krankenhaus:
             return -1
         else:
             return gesamt_alter / anzahl_patienten
-
+# {1}

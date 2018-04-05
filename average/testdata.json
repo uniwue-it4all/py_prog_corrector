@@ -1,31 +1,20 @@
 {
   "functionname": "average",
+  "basedata": [],
   "testdata": [
     {
       "id": 1,
-      "input": {
-        "my_list": []
-      },
+      "input": [],
       "output": "Fehler"
     },
     {
       "id": 2,
-      "input": {
-        "my_list": [
-          1
-        ]
-      },
+      "input": [1],
       "output": 1
     },
     {
       "id": 3,
-      "input": {
-        "my_list": [
-          3,
-          5,
-          7
-        ]
-      },
+      "input": [3, 5, 7],
       "output": 5
     }
   ]
