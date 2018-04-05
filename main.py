@@ -17,7 +17,9 @@ if __name__ == '__main__':
         complete_test_data = json.loads(test_data_file.read())
         function_name = complete_test_data['functionname']
 
-        base_data = convert_base_data(complete_test_data['basedata'])
+        base_data = None
+        if 'basedata' in complete_test_data:
+            base_data = convert_base_data(complete_test_data['basedata'])
 
         results = []
 

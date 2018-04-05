@@ -1,7 +1,5 @@
 {
   "functionname": "durchschnitt_alter_patienten",
-  "basedata": {
-  },
   "testdata": [
     {
       "id": 1,
