@@ -4,58 +4,79 @@ import json
 import sys
 import traceback
 from io import StringIO
+from typing import Dict, List, Any
 
-# noinspection PyUnresolvedReferences
-from test_main import test, convert_base_data, convert_test_input
+
+class SingleResult:
+    def __init__(self, test_id: int, test_input: Dict, awaited: Any, gotten: Any, success: str, stdout: str):
+        self.test_id = test_id
+        self.test_input = test_input
+        self.awaited = awaited
+        self.gotten = gotten
+        self.success = success
+        self.stdout = stdout
+
+
+def main_test(test_data_file_content: str) -> List[SingleResult]:
+    complete_test_data = json.loads(test_data_file_content)
+
+    base_data = None
+    if 'baseData' in complete_test_data:
+        base_data = convert_base_data(complete_test_data['baseData'])
+
+    test_results: List[SingleResult] = []
+
+    for test_data in complete_test_data['testdata']:
+        test_id = test_data['id']
+        test_input = test_data['input']
+        awaited_output = test_data['output']
+
+        # Convert input
+        converted_input = convert_test_input(base_data, test_input)
+
+        # Redirect stdout to variable test_stdout
+        sys.stdout = test_stdout = StringIO()
+
+        # noinspection PyBroadException
+        try:
+            (gotten_output, correctness) = test(base_data, converted_input, awaited_output)
+            success = 'COMPLETE' if correctness else 'NONE'
+        except Exception:
+            gotten_output = traceback.print_exc()
+            success = 'ERROR'
+
+        test_result = SingleResult(test_id, test_input, awaited_output, gotten_output, success, test_stdout.getvalue())
+
+        # Revert stdout to 'normal' stdout
+        sys.stdout = sys.__stdout__
+
+        test_results.append(test_result)
+
+    return test_results
+
 
 if __name__ == '__main__':
-    test_data_file_name = 'testdata.json'
-    result_file_name = 'result.json'
 
-    with open(test_data_file_name, 'r') as test_data_file, open(result_file_name, 'w') as result_file:
+    with open('testdata.json', 'r') as test_data_file, open('result.json', 'w') as result_file:
+        try:
+            # noinspection PyUnresolvedReferences
+            from test_main import test, convert_base_data, convert_test_input
 
-        complete_test_data = json.loads(test_data_file.read())
-        function_name = complete_test_data['functionname']
+            results = main_test(test_data_file.read())
+            result_type = 'run_through'
+            errors = ''
 
-        base_data = None
-        if 'baseData' in complete_test_data:
-            base_data = convert_base_data(complete_test_data['baseData'])
+        except SyntaxError:
+            # print("Caught syntax error: ")
+            results = []
+            result_type = 'syntax_error'
+            errors = traceback.format_exc()
+            pass
 
-        results = []
-
-        for test_data in complete_test_data['testdata']:
-            test_id = test_data['id']
-            input_json = test_data['input']
-            awaited_output = test_data['output']
-
-            # Convert input
-            converted_input = convert_test_input(base_data, input_json)
-
-            # Redirect stdout to variable test_stdout
-            sys.stdout = test_stdout = StringIO()
-
-            # noinspection PyBroadException
-            try:
-                (gotten_output, correctness) = test(base_data, converted_input, awaited_output)
-                result_type = 'COMPLETE' if correctness else 'NONE'
-            except Exception:
-                gotten_output = traceback.print_exc()
-                result_type = 'ERROR'
-
-            test_result = {
-                'id': test_id,
-                'input': input_json,
-                'awaited': awaited_output,
-                'gotten': gotten_output,
-                'success': result_type,
-                'stdout': test_stdout.getvalue()
-            }
-
-            # Revert stdout to 'normal' stdout
-            sys.stdout = sys.__stdout__
-
-            results.append(test_result)
-
-        to_write = json.dumps(results, indent=2)
+        to_write = json.dumps({
+            'result_type': result_type,
+            'results': list(map(lambda o: o.__dict__, results)),
+            'errors': errors
+        }, indent=2)
 
         result_file.write(to_write)
