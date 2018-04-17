@@ -41,8 +41,8 @@ def main_test(test_data_file_content: str) -> List[SingleResult]:
         try:
             (gotten_output, correctness) = test(base_data, converted_input, awaited_output)
             success = 'COMPLETE' if correctness else 'NONE'
-        except Exception:
-            gotten_output = traceback.print_exc()
+        except:
+            gotten_output = traceback.format_exc()
             success = 'ERROR'
 
         test_result = SingleResult(test_id, test_input, awaited_output, gotten_output, success, test_stdout.getvalue())
@@ -67,11 +67,9 @@ if __name__ == '__main__':
             errors = ''
 
         except SyntaxError:
-            # print("Caught syntax error: ")
             results = []
             result_type = 'syntax_error'
             errors = traceback.format_exc()
-            pass
 
         to_write = json.dumps({
             'result_type': result_type,
