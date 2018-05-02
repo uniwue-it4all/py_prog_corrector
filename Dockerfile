@@ -10,4 +10,4 @@ ADD main.py $WorkDir/main.py
 
 WORKDIR $WorkDir
 
-ENTRYPOINT ["timeout", "2s", "python", "main.py"]
+ENTRYPOINT ["timeout", "-t", "2s", "python", "main.py"]
