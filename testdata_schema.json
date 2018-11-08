@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "testdata": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {"type": "number"},
+          "input": {},
+          "output": {}
+        },
+        "required": ["id", "input", "output"]
+      }
+    }
+  },
+  "required": ["testdata"]
+}

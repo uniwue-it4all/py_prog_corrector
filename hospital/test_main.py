@@ -1,3 +1,4 @@
+from typing import List
 # noinspection PyUnresolvedReferences
 from solution import Patient, Station, Krankenhaus
 
@@ -8,7 +9,7 @@ def convert_base_data(json_basedata):
     return None
 
 
-def convert_test_input(base_data, input_json):
+def convert_test_input(base_data, input_json: List[List[int]]) -> Krankenhaus:
     stations = []
 
     # Instantiate all stations
