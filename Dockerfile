@@ -8,7 +8,8 @@ ARG WorkDir=/data
 
 ENV PYTHONPATH $WorkDir:$PYTHONPATH
 
-COPY entrypoint.sh test_base.py main.py simplified_main.py extended_main.py simplified_test_data.schema.json extended_test_data.schema.json $WorkDir/
+COPY entrypoint.sh test_base.py main.py simplified_main.py extended_main.py \
+    simplified_test_data.schema.json extended_test_data.schema.json unified_test_data.schema.json $WorkDir/
 
 WORKDIR $WorkDir
 

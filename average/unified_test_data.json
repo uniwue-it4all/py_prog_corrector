@@ -1,0 +1,28 @@
+{
+  "extended": {
+    "module_name": "solution",
+    "class_ut": "Average",
+    "methods": [
+      {"name": "average", "depends_on": []}
+    ]
+  },
+  "simplified": {
+    "test_data": [
+      {
+        "id": 1,
+        "input": [],
+        "output": "Fehler"
+      },
+      {
+        "id": 2,
+        "input": [1],
+        "output": 1
+      },
+      {
+        "id": 3,
+        "input": [3, 5, 7],
+        "output": 5
+      }
+    ]
+  }
+}

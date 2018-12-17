@@ -8,6 +8,13 @@ from unittest import TestCase, TextTestRunner, TestResult, TestSuite
 from test_base import SingleTestResult, CompleteTestResult
 
 
+class ExtendedTestData:
+    def __init__(self, module_name: str, class_under_test_name: str, methods: List[Any]):
+        self.module_name: str = module_name
+        self.class_under_test_name: str = class_under_test_name
+        self.methods: List[Any] = methods
+
+
 class ExtendedResult(SingleTestResult):
     def __init__(self, test_func_name: str, successful: bool, errors: List[List[str]], sys_out: str):
         self.test_func_name: str = test_func_name
@@ -34,9 +41,17 @@ class ExtendedCompleteTestResult(CompleteTestResult[ExtendedResult]):
         }
 
 
-def test_extended(test_data) -> ExtendedCompleteTestResult:
-    module_name: str = test_data['module_name']
-    class_under_test_name: str = test_data['class_ut']
+def read_extended_test_data_from_json_dict(json_dict: Dict) -> ExtendedTestData:
+    return ExtendedTestData(
+        json_dict['module_name'],
+        json_dict['class_ut'],
+        json_dict['methods']
+    )
+
+
+def test_extended(test_data: ExtendedTestData) -> ExtendedCompleteTestResult:
+    module_name: str = test_data.module_name
+    class_under_test_name: str = test_data.class_under_test_name
 
     # FIXME: capture syntax error...?
 
@@ -45,7 +60,7 @@ def test_extended(test_data) -> ExtendedCompleteTestResult:
     class_under_test = getattr(imported_module, "{}Test".format(class_under_test_name))
 
     test_results: List[ExtendedResult] = []
-    for func_to_test in test_data['methods']:
+    for func_to_test in test_data.methods:
         test_func_name: str = "test_{}".format(func_to_test['name'])
 
         suite = TestSuite()

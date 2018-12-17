@@ -1,5 +1,12 @@
 {
-  "testdata": [
+  "extended": {
+    "module_name": "solution",
+    "class_ut": "LongestString",
+    "methods": [
+      {"name": "longest_string", "depends_on": []}
+    ]
+  }, "simplified": {
+  "test_data": [
     {
       "id": 1,
       "input": [],
@@ -16,4 +23,5 @@
       "output": "111"
     }
   ]
+}
 }

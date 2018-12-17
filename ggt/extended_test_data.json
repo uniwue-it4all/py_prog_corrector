@@ -1,7 +1,0 @@
-{
-  "module_name": "solution",
-  "class_ut": "Ggt",
-  "methods": [
-    {"name": "ggt", "depends_on": []}
-  ]
-}

@@ -4,11 +4,9 @@ SOL_FILE=solution.py
 
 if [[ "$1" = "--extended" ]]
 then
-    TEST_DATA_FILE=extended_test_data.json
     RES_FILE=docker_extended_result.json
     ADDITIONAL_MOUNT=""
 else
-    TEST_DATA_FILE=simplified_test_data.json
     RES_FILE=docker_simplified_result.json
     ADDITIONAL_MOUNT="-v $(pwd)/test_main.py:/data/test_main.py"
 
@@ -19,6 +17,8 @@ else
         exit 101
     fi
 fi
+
+TEST_DATA_FILE=unified_test_data.json
 
 
 # Make sure test data file exists

@@ -11,6 +11,19 @@ from test_main import test, convert_base_data, convert_test_input
 from test_base import SingleTestResult, CompleteTestResult
 
 
+class SingleSimplifiedTestData:
+    def __init__(self, id: int, input: List[Any], output: Any):
+        self.id: int = id
+        self.input: List[Any] = input
+        self.output: Any = output
+
+
+class SimplifiedTestData:
+    def __init__(self, base_data: Any, single_test_data: List[SingleSimplifiedTestData]):
+        self.base_data: Any = base_data
+        self.single_test_data: List[SingleSimplifiedTestData] = single_test_data
+
+
 class SimplifiedResult(SingleTestResult):
     def __init__(self, test_id: int, test_input: Any, awaited: Any, gotten: Any, success: str, stdout: str):
         self.test_id: int = test_id
@@ -45,10 +58,20 @@ class SimplifiedCompleteResult(CompleteTestResult[SimplifiedResult]):
         }
 
 
-def perform_test(base_data: Any, test_data: Any) -> SimplifiedResult:
-    test_id: int = test_data['id']
-    test_input: Any = test_data['input']
-    awaited_output: Any = test_data['output']
+def read_simplified_test_data_from_json_dict(json_dict: Dict) -> SimplifiedTestData:
+    single_test_data: List[SingleSimplifiedTestData] = []
+
+    for single_td_json in json_dict['test_data']:
+        single_td = SingleSimplifiedTestData(int(single_td_json['id']), single_td_json['input'],
+                                             single_td_json['output'])
+        single_test_data.append(single_td)
+
+    return SimplifiedTestData(json_dict['base_data'], single_test_data)
+
+
+def perform_test(base_data: Any, test_data: SingleSimplifiedTestData) -> SimplifiedResult:
+    test_input: Any = test_data.input
+    awaited_output: Any = test_data.output
 
     # Convert input
     converted_input: Any = convert_test_input(base_data, test_input)
@@ -67,24 +90,24 @@ def perform_test(base_data: Any, test_data: Any) -> SimplifiedResult:
     # Revert stdout to 'normal' stdout
     sys.stdout = sys.__stdout__
 
-    return SimplifiedResult(test_id, test_input, awaited_output, gotten_output, success, test_stdout.getvalue())
+    return SimplifiedResult(test_data.id, test_input, awaited_output, gotten_output, success, test_stdout.getvalue())
 
 
-def main_test(complete_test_data: Any) -> List[SimplifiedResult]:
+def main_test(complete_test_data: SimplifiedTestData) -> List[SimplifiedResult]:
     base_data = None
-    if 'baseData' in complete_test_data:
-        base_data = convert_base_data(complete_test_data['baseData'])
+    if complete_test_data.base_data is not None:
+        base_data = convert_base_data(complete_test_data.base_data)
 
     test_results: List[SimplifiedResult] = []
 
-    for test_data in complete_test_data['testdata']:
+    for test_data in complete_test_data.single_test_data:
         single_result: SimplifiedResult = perform_test(base_data, test_data)
         test_results.append(single_result)
 
     return test_results
 
 
-def test_simplified(test_data) -> object:
+def test_simplified(test_data: SimplifiedTestData) -> object:
     try:
         results: List[SimplifiedResult] = main_test(test_data)
         result_type: str = 'run_through'

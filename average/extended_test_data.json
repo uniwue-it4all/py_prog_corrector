@@ -1,7 +1,0 @@
-{
-  "module_name": "solution",
-  "class_ut": "Average",
-  "methods": [
-    {"name": "average", "depends_on": []}
-  ]
-}

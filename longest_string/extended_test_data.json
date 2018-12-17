@@ -1,7 +1,0 @@
-{
-  "module_name": "solution",
-  "class_ut": "LongestString",
-  "methods": [
-    {"name": "longest_string", "depends_on": []}
-  ]
-}

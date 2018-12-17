@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "properties": {
+    "extended": {
+      "anyOf": [
+        {"type": "null"},
+        {"$ref": "#/definitions/ExtendedTestData"}
+      ]
+    },
+    "simplified": {
+      "anyOf": [
+        {"type": "null"},
+        {"$ref": "#/definitions/SimplifiedTestData"}
+      ]
+    }
+  },
+  "required": ["extended", "simplified"],
+  "definitions": {
+    "ExtendedTestData": {
+      "type": "object",
+      "properties": {
+        "module_name": {"type": "string"},
+        "class_ut": {"type": "string"},
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "depends_on": {
+                "type": "array",
+                "items": {"type": "string"}
+              }
+            },
+            "required": ["name", "depends_on"]
+          }
+        }
+      },
+      "required": ["module_name", "class_ut", "methods"]
+    },
+    "SimplifiedTestData": {
+      "type": "object",
+      "properties": {
+        "base_data": {},
+        "test_data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "number"},
+              "input": {},
+              "output": {}
+            },
+            "required": ["id", "input", "output"]
+          }
+        }
+      },
+      "required": ["test_data"]
+    }
+  }
+}
