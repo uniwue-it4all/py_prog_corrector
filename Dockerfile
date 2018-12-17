@@ -7,8 +7,8 @@ ARG WorkDir=/data
 
 ENV PYTHONPATH $WorkDir:$PYTHONPATH
 
-ADD main.py $WorkDir/main.py
+COPY simplified_main.py extended_main.py $WorkDir/
 
 WORKDIR $WorkDir
 
-ENTRYPOINT timeout -t 2 -s KILL python main.py
+ENTRYPOINT timeout -t 2 -s KILL python simplified_main.py

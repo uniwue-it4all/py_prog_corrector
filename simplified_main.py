@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 
-import json
 import sys
-from traceback import format_exc as traceback_format_exc
 from io import StringIO
+from json import loads as json_loads, dumps as json_dumps
+from traceback import format_exc as traceback_format_exc
 from typing import List, Any
 
 # noinspection PyUnresolvedReferences
 from test_main import test, convert_base_data, convert_test_input
+
+test_data_file_name: str = 'testdata.json'
+result_file_name: str = 'result.json'
 
 
 class SingleResult:
@@ -45,9 +48,7 @@ def perform_test(base_data: Any, test_data: Any) -> SingleResult:
     return SingleResult(test_id, test_input, awaited_output, gotten_output, success, test_stdout.getvalue())
 
 
-def main_test(test_data_file_content: str) -> List[SingleResult]:
-    complete_test_data = json.loads(test_data_file_content)
-
+def main_test(complete_test_data: Any) -> List[SingleResult]:
     base_data = None
     if 'baseData' in complete_test_data:
         base_data = convert_base_data(complete_test_data['baseData'])
@@ -61,23 +62,24 @@ def main_test(test_data_file_content: str) -> List[SingleResult]:
     return test_results
 
 
-if __name__ == '__main__':
+with open(test_data_file_name, 'r') as test_data_file:
+    complete_test_data = json_loads(test_data_file.read())
 
-    with open('testdata.json', 'r') as test_data_file, open('result.json', 'w') as result_file:
-        try:
-            results = main_test(test_data_file.read())
-            result_type = 'run_through'
-            errors = ''
+results: List[SingleResult]
+try:
+    results = main_test(complete_test_data)
+    result_type = 'run_through'
+    errors = ''
+except SyntaxError:
+    results = []
+    result_type = 'syntax_error'
+    errors = traceback_format_exc()
 
-        except SyntaxError:
-            results = []
-            result_type = 'syntax_error'
-            errors = traceback_format_exc()
+to_write = json_dumps({
+    'result_type': result_type,
+    'results': list(map(lambda o: o.__dict__, results)),
+    'errors': errors
+})  # , indent=2)
 
-        to_write = json.dumps({
-            'result_type': result_type,
-            'results': list(map(lambda o: o.__dict__, results)),
-            'errors': errors
-        })  # , indent=2)
-
-        result_file.write(to_write)
+with open('result.json', 'w') as result_file:
+    result_file.write(to_write)

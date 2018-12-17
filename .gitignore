@@ -1,3 +1,7 @@
 .idea/
+
 __pycache__/
+
 */result.json
+
+.mypy_cache/

@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "properties": {
+    "class_ut": {"type": "string"},
+    "methods": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "depends_on": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        },
+        "required": ["name", "depends_on"]
+      }
+    }
+  },
+  "required": ["class_ut", "methods"]
+}
