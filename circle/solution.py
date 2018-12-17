@@ -10,6 +10,9 @@ class Circle:
         pass
 
     def __repr__(self) -> str:
+        i = 0
+        while True:
+            i = i + 1
         pass
 
     def area(self) -> float:

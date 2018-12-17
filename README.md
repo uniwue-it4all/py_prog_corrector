@@ -1,5 +1,9 @@
 # Python Test Image for it4all
 
+## Exit codes
+
+* `2`: Validation error test data vs. test data schema
+
 ## `test_main.py` base
 
 ```python

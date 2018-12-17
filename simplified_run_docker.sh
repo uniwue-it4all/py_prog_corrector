@@ -11,7 +11,7 @@ fi
 
 # TODO: maybe check if files exist?
 
-docker run -it --rm --name test_pytest \
+docker run -it --rm \
     -v $(pwd)/test_main.py:/data/test_main.py \
     -v $(pwd)/solution.py:/data/solution.py \
     -v $(pwd)/testdata.json:/data/testdata.json \

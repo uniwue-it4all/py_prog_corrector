@@ -1,6 +1,7 @@
 {
   "type": "object",
   "properties": {
+    "module_name": {"type": "string"},
     "class_ut": {"type": "string"},
     "methods": {
       "type": "array",
@@ -17,5 +18,5 @@
       }
     }
   },
-  "required": ["class_ut", "methods"]
+  "required": ["module_name", "class_ut", "methods"]
 }

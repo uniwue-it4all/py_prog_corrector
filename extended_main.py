@@ -1,60 +1,74 @@
-#!/usr/bin/env python3
-
 import sys
 from importlib import import_module
 from io import StringIO
-from json import loads as json_loads, dumps as json_dumps
+from typing import Dict, Any
 from typing import List, Tuple
 from unittest import TestCase, TextTestRunner, TestResult, TestSuite
 
-testdata_file_name: str = 'testdata.json'
-result_file_name: str = 'result.json'
+from test_base import SingleTestResult, CompleteTestResult
 
-# Read test config from json file
-with open(testdata_file_name, 'r') as testdata_file:
-    testdata = json_loads(testdata_file.read())
 
-problem_file_name: str = testdata['class_ut'].lower()
+class ExtendedResult(SingleTestResult):
+    def __init__(self, test_func_name: str, successful: bool, errors: List[List[str]], sys_out: str):
+        self.test_func_name: str = test_func_name
+        self.successful: bool = successful
+        self.errors: List[List[str]] = errors
+        self.sys_out: str = sys_out
 
-# FIXME: capture syntax error...?
+    def to_json_dict(self) -> Dict[str, Any]:
+        return {
+            'name': self.test_func_name,
+            'successful': self.successful,
+            'errors': self.errors,
+            'sysout': self.sys_out,
+        }
 
-# Import learner solution, get test class from import
-imported_module = import_module(problem_file_name)
-class_under_test = getattr(imported_module, 'CircleTest')
 
-test_results = []
+class ExtendedCompleteTestResult(CompleteTestResult[ExtendedResult]):
+    def __init__(self, results: List[ExtendedResult]):
+        super().__init__(results)
 
-# FIXME: run tests in dependent order...
+    def to_json_dict(self) -> Dict[str, Any]:
+        return {
+            "results": list(map(lambda r: r.to_json_dict(), self.results))
+        }
 
-for func_to_test in testdata['methods']:
-    test_func_name: str = "test_{}".format(func_to_test['name'])
 
-    suite = TestSuite()
-    suite.addTest(class_under_test(test_func_name))
+def test_extended(test_data) -> ExtendedCompleteTestResult:
+    module_name: str = test_data['module_name']
+    class_under_test_name: str = test_data['class_ut']
 
-    # Redirect stdout to variable test_stdout
-    sys.stdout = test_stdout = StringIO()
+    # FIXME: capture syntax error...?
 
-    test_output_target: StringIO = StringIO()
+    # Import learner solution, get test class from import
+    imported_module = import_module(module_name)
+    class_under_test = getattr(imported_module, "{}Test".format(class_under_test_name))
 
-    runner: TextTestRunner = TextTestRunner(stream=test_output_target)
-    test_result: TestResult = runner.run(suite)
+    test_results: List[ExtendedResult] = []
+    for func_to_test in test_data['methods']:
+        test_func_name: str = "test_{}".format(func_to_test['name'])
 
-    # Reset stdout to original
-    sys.stdout = sys.__stdout__
+        suite = TestSuite()
+        suite.addTest(class_under_test(test_func_name))
 
-    error_msgs: List[List[str]] = []
+        # Redirect stdout to variable test_stdout
+        sys.stdout = test_stdout = StringIO()
 
-    errors_and_failures: List[Tuple[TestCase, str]] = test_result.errors + test_result.failures
-    for error in errors_and_failures:
-        error_msgs.append(error[1].split('\n'))
+        test_output_target: StringIO = StringIO()
 
-    test_results.append({
-        'name': test_func_name,
-        'successful': len(errors_and_failures) == 0,
-        'errors': error_msgs,
-        'sysout': test_stdout.getvalue(),
-    })
+        runner: TextTestRunner = TextTestRunner(stream=test_output_target)
+        test_result: TestResult = runner.run(suite)
 
-with open(result_file_name, 'w') as result_file:
-    result_file.write(json_dumps(test_results, indent=2))
+        # Reset stdout to original
+        sys.stdout = sys.__stdout__
+
+        error_msgs: List[List[str]] = []
+
+        errors_and_failures: List[Tuple[TestCase, str]] = test_result.errors + test_result.failures
+        for error in errors_and_failures:
+            error_msgs.append(error[1].split('\n'))
+
+        test_results.append(
+            ExtendedResult(test_func_name, len(errors_and_failures) == 0, error_msgs, test_stdout.getvalue()))
+
+    return ExtendedCompleteTestResult(test_results)

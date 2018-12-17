@@ -2,18 +2,15 @@
 
 import sys
 from io import StringIO
-from json import loads as json_loads, dumps as json_dumps
 from traceback import format_exc as traceback_format_exc
-from typing import List, Any
+from typing import List, Any, Dict
 
-# noinspection PyUnresolvedReferences
+from test_base import SingleTestResult, CompleteTestResult
+
 from test_main import test, convert_base_data, convert_test_input
 
-test_data_file_name: str = 'testdata.json'
-result_file_name: str = 'result.json'
 
-
-class SingleResult:
+class SimplifiedResult(SingleTestResult):
     def __init__(self, test_id: int, test_input: Any, awaited: Any, gotten: Any, success: str, stdout: str):
         self.test_id: int = test_id
         self.test_input: Any = test_input
@@ -22,8 +19,32 @@ class SingleResult:
         self.success: str = success
         self.stdout: str = stdout
 
+    def to_json_dict(self) -> Dict:
+        return {
+            "test_id": self.test_id,
+            "test_input": self.test_input,
+            "awaited": self.awaited,
+            "gotten": self.gotten,
+            "success": self.success,
+            "stdout": self.stdout
+        }
 
-def perform_test(base_data: Any, test_data: Any) -> SingleResult:
+
+class SimplifiedCompleteResult(CompleteTestResult[SimplifiedResult]):
+    def __init__(self, results: List[SimplifiedResult], result_type: str, errors: str):
+        super().__init__(results)
+        self.result_type: str = result_type
+        self.errors: str = errors
+
+    def to_json_dict(self) -> Dict[str, Any]:
+        return {
+            "results": list(map(lambda r: r.to_json_dict(), self.results)),
+            "result_type": self.result_type,
+            "errors": self.errors
+        }
+
+
+def perform_test(base_data: Any, test_data: Any) -> SimplifiedResult:
     test_id: int = test_data['id']
     test_input: Any = test_data['input']
     awaited_output: Any = test_data['output']
@@ -45,41 +66,31 @@ def perform_test(base_data: Any, test_data: Any) -> SingleResult:
     # Revert stdout to 'normal' stdout
     sys.stdout = sys.__stdout__
 
-    return SingleResult(test_id, test_input, awaited_output, gotten_output, success, test_stdout.getvalue())
+    return SimplifiedResult(test_id, test_input, awaited_output, gotten_output, success, test_stdout.getvalue())
 
 
-def main_test(complete_test_data: Any) -> List[SingleResult]:
+def main_test(complete_test_data: Any) -> List[SimplifiedResult]:
     base_data = None
     if 'baseData' in complete_test_data:
         base_data = convert_base_data(complete_test_data['baseData'])
 
-    test_results: List[SingleResult] = []
+    test_results: List[SimplifiedResult] = []
 
     for test_data in complete_test_data['testdata']:
-        single_result: SingleResult = perform_test(base_data, test_data)
+        single_result: SimplifiedResult = perform_test(base_data, test_data)
         test_results.append(single_result)
 
     return test_results
 
 
-with open(test_data_file_name, 'r') as test_data_file:
-    complete_test_data = json_loads(test_data_file.read())
+def test_simplified(test_data) -> object:
+    try:
+        results: List[SimplifiedResult] = main_test(test_data)
+        result_type: str = 'run_through'
+        errors: str = ''
+    except SyntaxError:
+        results = []
+        result_type = 'syntax_error'
+        errors = traceback_format_exc()
 
-results: List[SingleResult]
-try:
-    results = main_test(complete_test_data)
-    result_type = 'run_through'
-    errors = ''
-except SyntaxError:
-    results = []
-    result_type = 'syntax_error'
-    errors = traceback_format_exc()
-
-to_write = json_dumps({
-    'result_type': result_type,
-    'results': list(map(lambda o: o.__dict__, results)),
-    'errors': errors
-})  # , indent=2)
-
-with open('result.json', 'w') as result_file:
-    result_file.write(to_write)
+    return SimplifiedCompleteResult(results, result_type, errors)

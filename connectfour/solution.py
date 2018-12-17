@@ -4,7 +4,7 @@ from typing import List
 std_num_of_rows = 6
 std_num_of_cols = 7
 
-file_names = ['winner_x', 'winner_o'] #, 'no_winner']
+file_names = ['winner_x.txt', 'winner_o.txt'] #, 'no_winner']
 
 
 class FieldState(Enum):

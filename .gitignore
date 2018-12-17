@@ -2,6 +2,6 @@
 
 __pycache__/
 
-*/result.json
+**/*result.json
 
 .mypy_cache/
