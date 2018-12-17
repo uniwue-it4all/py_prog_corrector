@@ -44,11 +44,8 @@ with open(test_data_schema_file_name, 'r') as test_data_schema_file:
 with open(test_data_file_name, 'r') as test_data_file:
     test_data = json_loads(test_data_file.read())
 
-# Try to validate test data
-try:
-    validate(test_data, test_data_schema)
-except ValidationError:
-    exit(2)
+# validate test data against json schema (raises exception if not successful...)
+validate(test_data, test_data_schema)
 
 test_result: CompleteTestResult
 if is_extended:
