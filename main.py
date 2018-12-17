@@ -23,8 +23,6 @@ def parse_args() -> Namespace:
 
 args: Namespace = parse_args()
 
-print(args)
-
 is_extended: bool = args.extended
 
 test_data_file_name: str = 'test_data.json' if args.test_data_file is None else args.test_data_file
