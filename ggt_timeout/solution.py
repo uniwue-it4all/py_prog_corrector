@@ -2,11 +2,8 @@ import unittest
 
 
 def ggt(a: int, b: int) -> int:
-    while b != 0:
-        h = a % b
-        a = b
-        b = h
-    return a
+    while a != 0:
+        b += 1
 
 
 class GgtTest(unittest.TestCase):

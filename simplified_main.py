@@ -5,9 +5,10 @@ from io import StringIO
 from traceback import format_exc as traceback_format_exc
 from typing import List, Any, Dict
 
-from test_base import SingleTestResult, CompleteTestResult
-
+# noinspection PyUnresolvedReferences
 from test_main import test, convert_base_data, convert_test_input
+
+from test_base import SingleTestResult, CompleteTestResult
 
 
 class SimplifiedResult(SingleTestResult):

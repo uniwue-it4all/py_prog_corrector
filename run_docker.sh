@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+SOL_FILE=solution.py
+
 if [[ "$1" = "--extended" ]]
 then
     TEST_DATA_FILE=extended_test_data.json
@@ -8,16 +10,32 @@ then
 else
     TEST_DATA_FILE=simplified_test_data.json
     RES_FILE=docker_simplified_result.json
+    ADDITIONAL_MOUNT="-v $(pwd)/test_main.py:/data/test_main.py"
 
-    # TODO: check if test_main exists...
+    # make sure that test_main exists...
     if [[ ! -f test_main.py ]]
     then
         echo "The file test_main.py does not exist!"
-        exit 1
+        exit 101
     fi
-    ADDITIONAL_MOUNT="-v $(pwd)/test_main.py:/data/test_main.py"
 fi
 
+
+# Make sure test data file exists
+if [[ ! -f ${TEST_DATA_FILE} ]]
+then
+    echo "The test data file ${TEST_DATA_FILE} does not exist!"
+    exit 102
+fi
+
+# Make sure solution file exists
+if [[ ! -f ${SOL_FILE} ]]
+then
+    echo "The solution file ${SOL_FILE} does not exist!"
+    exit 103
+fi
+
+# Create or clear result file
 if [[ ! -f ${RES_FILE} ]]
 then
     touch ${RES_FILE}
@@ -27,6 +45,6 @@ fi
 
 docker run -it --rm \
     -v $(pwd)/${TEST_DATA_FILE}:/data/test_data.json \
-    -v $(pwd)/solution.py:/data/solution.py \
+    -v $(pwd)/${SOL_FILE}:/data/solution.py \
     -v $(pwd)/${RES_FILE}:/data/result.json \
     ${ADDITIONAL_MOUNT} prog_tester_new $1
