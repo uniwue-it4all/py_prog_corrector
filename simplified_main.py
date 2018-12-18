@@ -59,6 +59,10 @@ class SimplifiedCompleteResult(CompleteTestResult[SimplifiedResult]):
 
 
 def read_simplified_test_data_from_json_dict(json_dict: Dict) -> SimplifiedTestData:
+    base_data: Any = None
+    if 'base_data' in json_dict:
+        base_data = json_dict['base_data']
+
     single_test_data: List[SingleSimplifiedTestData] = []
 
     for single_td_json in json_dict['test_data']:
@@ -66,7 +70,7 @@ def read_simplified_test_data_from_json_dict(json_dict: Dict) -> SimplifiedTestD
                                              single_td_json['output'])
         single_test_data.append(single_td)
 
-    return SimplifiedTestData(json_dict['base_data'], single_test_data)
+    return SimplifiedTestData(base_data, single_test_data)
 
 
 def perform_test(base_data: Any, test_data: SingleSimplifiedTestData) -> SimplifiedResult:
