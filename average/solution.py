@@ -1,20 +1,9 @@
-import unittest
-from typing import List
+from typing import List, Optional
 
 
-def average(my_list: List[int]) -> float:
+def average(my_list: List[int]) -> Optional[float]:
     length = len(my_list)
     if length == 0:
-        return "Fehler"
+        return None
     else:
         return sum(my_list) / length
-
-
-class AverageTest(unittest.TestCase):
-    def test_average(self):
-        self.assertEqual(0, average([0]))
-        self.assertAlmostEqual(4., average([3, 4, 5]))
-        self.assertAlmostEqual(5.4, average([2, 3, 9, 5, 8]))
-
-        with self.assertRaises(Exception):
-            average([])

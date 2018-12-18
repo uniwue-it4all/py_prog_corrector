@@ -1,6 +1,0 @@
-_ _ _ _ _ _ _
-_ X _ _ _ _ _
-X O X O O _ _
-O O O X O X _
-X X O X O X X
-O O X O O X X

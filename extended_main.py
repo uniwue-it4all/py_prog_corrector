@@ -50,7 +50,7 @@ def read_extended_test_data_from_json_dict(json_dict: Dict) -> ExtendedTestData:
 
 
 def test_extended(test_data: ExtendedTestData) -> ExtendedCompleteTestResult:
-    module_name: str = test_data.module_name
+    module_name: str = 'extended_tests'  # test_data.module_name
     class_under_test_name: str = test_data.class_under_test_name
 
     # FIXME: capture syntax error...?

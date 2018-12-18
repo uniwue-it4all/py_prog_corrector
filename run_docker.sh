@@ -5,7 +5,15 @@ SOL_FILE=solution.py
 if [[ "$1" = "--extended" ]]
 then
     RES_FILE=docker_extended_result.json
-    ADDITIONAL_MOUNT=""
+    ADDITIONAL_MOUNT="-v $(pwd)/extended_tests.py:/data/extended_tests.py"
+
+    # make sure tests_file exists
+    if [[ ! -f extended_tests.py ]]
+    then
+        echo "The file extended_tests.py does not exist!"
+        exit 101
+    fi
+
 else
     RES_FILE=docker_simplified_result.json
     ADDITIONAL_MOUNT="-v $(pwd)/test_main.py:/data/test_main.py"
