@@ -1,6 +1,5 @@
 from typing import List, Any, Tuple
 
-# noinspection PyUnresolvedReferences
 from solution import ggt
 
 

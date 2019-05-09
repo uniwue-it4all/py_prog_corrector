@@ -1,6 +1,5 @@
 from typing import Any, Tuple, Optional, List
 
-# noinspection PyUnresolvedReferences
 from solution import average
 
 epsilon = 1e-3

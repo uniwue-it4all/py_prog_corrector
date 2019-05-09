@@ -3,41 +3,72 @@
   "properties": {
     "extended": {
       "anyOf": [
-        {"type": "null"},
-        {"$ref": "#/definitions/ExtendedTestData"}
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/ExtendedTestData"
+        }
       ]
     },
     "simplified": {
       "anyOf": [
-        {"type": "null"},
-        {"$ref": "#/definitions/SimplifiedTestData"}
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/SimplifiedTestData"
+        }
       ]
     }
   },
-  "__required__": ["extended", "simplified"],
+  "required": [
+    "extended",
+    "simplified"
+  ],
+  "additionalProperties": false,
   "definitions": {
     "ExtendedTestData": {
       "type": "object",
       "properties": {
-        "module_name": {"type": "string"},
-        "class_ut": {"type": "string"},
+        "module_name": {
+          "type": "string"
+        },
+        "class_ut": {
+          "type": "string"
+        },
         "methods": {
           "type": "array",
-          "items": {"$ref": "#/definitions/ExtendedMethodTestData"}
+          "items": {
+            "$ref": "#/definitions/ExtendedMethodTestData"
+          }
         }
       },
-      "required": ["module_name", "class_ut", "methods"]
+      "required": [
+        "module_name",
+        "class_ut",
+        "methods"
+      ],
+      "additionalProperties": false
     },
     "ExtendedMethodTestData": {
       "type": "object",
       "properties": {
-        "name": {"type": "string"},
+        "name": {
+          "type": "string"
+        },
         "depends_on": {
           "type": "array",
-          "items": {"type": "string"}
+          "items": {
+            "type": "string"
+          }
         }
       },
-      "required": ["name", "depends_on"]
+      "required": [
+        "name",
+        "depends_on"
+      ],
+      "additionalProperties": false
     },
     "SimplifiedTestData": {
       "type": "object",
@@ -45,19 +76,31 @@
         "base_data": {},
         "test_data": {
           "type": "array",
-          "items": {"$ref": "#/definitions/SingleSimplifiedTestData"}
+          "items": {
+            "$ref": "#/definitions/SingleSimplifiedTestData"
+          }
         }
       },
-      "required": ["test_data"]
+      "required": [
+        "test_data"
+      ],
+      "additionalProperties": false
     },
     "SingleSimplifiedTestData": {
       "type": "object",
       "properties": {
-        "id": {"type": "number"},
+        "id": {
+          "type": "number"
+        },
         "input": {},
         "output": {}
       },
-      "required": ["id", "input", "output"]
+      "required": [
+        "id",
+        "input",
+        "output"
+      ],
+      "additionalProperties": false
     }
   }
 }

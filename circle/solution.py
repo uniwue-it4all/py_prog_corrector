@@ -5,13 +5,9 @@ class Circle:
     def __init__(self, center: Tuple[float, float], radius: float):
         self.center = center
         self.radius = radius
-        pass
 
     def __repr__(self) -> str:
-        # i = 0
-        # while True:
-        #     i = i + 1
-        pass
+        return f'Circle(c = {self.center}, r = {self.radius})'
 
     def area(self) -> float:
         pass

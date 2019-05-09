@@ -1,7 +1,5 @@
 import math
 import unittest
-
-# noinspection PyUnresolvedReferences
 from solution import Circle
 
 

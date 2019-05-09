@@ -1,5 +1,4 @@
 import unittest
-# noinspection PyUnresolvedReferences
 from solution import longest_string
 
 

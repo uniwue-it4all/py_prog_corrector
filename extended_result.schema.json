@@ -3,14 +3,27 @@
   "items": {
     "type": "object",
     "properties": {
-      "name": {"type": "string"},
-      "successful": {"type": "boolean"},
+      "name": {
+        "type": "string"
+      },
+      "successful": {
+        "type": "boolean"
+      },
       "error": {
         "type": "array",
-        "items": {"type": "string"}
+        "items": {
+          "type": "string"
+        }
       },
-      "sysout": {"type": "string"}
+      "sysout": {
+        "type": "string"
+      }
     },
-    "required": ["name", "successful", "errors", "sysout"]
+    "required": [
+      "name",
+      "successful",
+      "errors",
+      "sysout"
+    ]
   }
 }

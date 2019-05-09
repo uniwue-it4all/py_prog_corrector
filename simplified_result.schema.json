@@ -1,22 +1,44 @@
 {
   "type": "object",
   "properties": {
-    "result_type": {"type": "string"},
+    "result_type": {
+      "type": "string"
+    },
     "results": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "test_id": {"type": "number"},
-          "test_input": {"type": "array", "items": {}},
+          "test_id": {
+            "type": "number"
+          },
+          "test_input": {
+            "type": "array",
+            "items": {}
+          },
           "awaited": {},
           "gotten": {},
-          "success": {"type": "string", "enum": ["COMPLETE", "ERROR", "NONE"]},
-          "stdout": {"type": "string"}
+          "success": {
+            "type": "string",
+            "enum": [
+              "COMPLETE",
+              "ERROR",
+              "NONE"
+            ]
+          },
+          "stdout": {
+            "type": "string"
+          }
         }
       }
     },
-    "errors": {"type": "string"}
+    "errors": {
+      "type": "string"
+    }
   },
-  "required": ["result_type", "results", "errors"]
+  "required": [
+    "result_type",
+    "results",
+    "errors"
+  ]
 }

@@ -1,6 +1,5 @@
 from typing import List
 
-# noinspection PyUnresolvedReferences
 from solution import longest_string
 
 

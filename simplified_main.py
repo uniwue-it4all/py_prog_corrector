@@ -111,7 +111,7 @@ def main_test(complete_test_data: SimplifiedTestData) -> List[SimplifiedResult]:
     return test_results
 
 
-def test_simplified(test_data: SimplifiedTestData) -> object:
+def test_simplified(test_data: SimplifiedTestData) -> SimplifiedCompleteResult:
     try:
         results: List[SimplifiedResult] = main_test(test_data)
         result_type: str = 'run_through'

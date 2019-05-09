@@ -1,4 +1,3 @@
-# noinspection PyUnresolvedReferences
 from solution import ggt
 
 

@@ -3,6 +3,7 @@
 ## Exit codes
 
 * `2`: Validation error test data vs. test data schema
+* `20`: No file `test_main.py`
 
 ## `test_main.py` base
 
