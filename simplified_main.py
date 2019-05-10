@@ -35,8 +35,8 @@ class SimplifiedResult(SingleTestResult):
 
     def to_json_dict(self) -> Dict:
         return {
-            "test_id": self.test_id,
-            "test_input": self.test_input,
+            "testId": self.test_id,
+            "testInput": self.test_input,
             "awaited": self.awaited,
             "gotten": self.gotten,
             "success": self.success,
@@ -53,19 +53,19 @@ class SimplifiedCompleteResult(CompleteTestResult[SimplifiedResult]):
     def to_json_dict(self) -> Dict[str, Any]:
         return {
             "results": list(map(lambda r: r.to_json_dict(), self.results)),
-            "result_type": self.result_type,
+            "resultType": self.result_type,
             "errors": self.errors
         }
 
 
 def read_simplified_test_data_from_json_dict(json_dict: Dict) -> SimplifiedTestData:
     base_data: Any = None
-    if 'base_data' in json_dict:
-        base_data = json_dict['base_data']
+    if 'baseData' in json_dict:
+        base_data = json_dict['baseData']
 
     single_test_data: List[SingleSimplifiedTestData] = []
 
-    for single_td_json in json_dict['test_data']:
+    for single_td_json in json_dict['testData']:
         single_td = SingleSimplifiedTestData(int(single_td_json['id']), single_td_json['input'],
                                              single_td_json['output'])
         single_test_data.append(single_td)

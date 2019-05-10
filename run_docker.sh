@@ -4,6 +4,8 @@ EX=${1:-ggt}
 
 SOL_FILE=${EX}/solution.py
 
+IMG_NAME=beyselein/python_prog_tester:extended
+
 if [[ "$2" = "--extended" ]]; then
     RES_FILE=results/${EX}_extended_result.json
     ADDITIONAL_MOUNT="-v $(pwd)/${EX}/extended_tests.py:/data/extended_tests.py"
@@ -50,4 +52,4 @@ docker run -it --rm \
     -v $(pwd)/${TEST_DATA_FILE}:/data/test_data.json \
     -v $(pwd)/${SOL_FILE}:/data/solution.py \
     -v $(pwd)/${RES_FILE}:/data/result.json \
-    ${ADDITIONAL_MOUNT} prog_tester_new $2
+    ${ADDITIONAL_MOUNT} ${IMG_NAME} $2
