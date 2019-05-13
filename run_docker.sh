@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-EX=${1:-ggt}
+EX=${1:?"Error: exercise folder is not defined!"}
 
 SOL_FILE=${EX}/solution.py
 
