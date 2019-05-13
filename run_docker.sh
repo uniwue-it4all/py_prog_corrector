@@ -42,4 +42,4 @@ docker run -it --rm \
     -v $(pwd)/${SOL_FILE}:/data/solution.py \
     -v $(pwd)/${RES_FILE}:/data/result.json \
     -v $(pwd)/${TEST_MAIN_FILE}:/data/test_main.py \
-    ${IMG_NAME} $2
+    ${IMG_NAME}

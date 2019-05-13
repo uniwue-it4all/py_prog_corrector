@@ -4,12 +4,12 @@ RUN pip install --upgrade pip jsonschema
 
 LABEL maintainer="b.eyselein@gmail.com"
 
-ARG WorkDir=/data
+ARG WORKDIR=/data
 
-ENV PYTHONPATH $WorkDir:$PYTHONPATH
+ENV PYTHONPATH $WORKDIR:$PYTHONPATH
 
-COPY main.py simplified_main.py test_data.schema.json $WorkDir/
+COPY main.py simplified_main.py test_data.schema.json $WORKDIR/
 
-WORKDIR $WorkDir
+WORKDIR $WORKDIR
 
 ENTRYPOINT timeout -t 2 -s KILL python main.py
