@@ -1,4 +1,4 @@
-.idea/
+.idea/*
 !.idea/jsonSchemas.xml
 
 __pycache__/

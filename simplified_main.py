@@ -8,8 +8,6 @@ from typing import List, Any, Dict
 # noinspection PyUnresolvedReferences
 from test_main import test, convert_base_data, convert_test_input
 
-from test_base import SingleTestResult, CompleteTestResult
-
 
 class SingleSimplifiedTestData:
     def __init__(self, id: int, input: List[Any], output: Any):
@@ -18,13 +16,13 @@ class SingleSimplifiedTestData:
         self.output: Any = output
 
 
-class SimplifiedTestData:
+class TestData:
     def __init__(self, base_data: Any, single_test_data: List[SingleSimplifiedTestData]):
         self.base_data: Any = base_data
         self.single_test_data: List[SingleSimplifiedTestData] = single_test_data
 
 
-class SimplifiedResult(SingleTestResult):
+class SimplifiedResult:
     def __init__(self, test_id: int, test_input: Any, awaited: Any, gotten: Any, success: str, stdout: str):
         self.test_id: int = test_id
         self.test_input: Any = test_input
@@ -44,9 +42,9 @@ class SimplifiedResult(SingleTestResult):
         }
 
 
-class SimplifiedCompleteResult(CompleteTestResult[SimplifiedResult]):
+class SimplifiedCompleteResult:
     def __init__(self, results: List[SimplifiedResult], result_type: str, errors: str):
-        super().__init__(results)
+        self.results: List[SimplifiedResult] = results
         self.result_type: str = result_type
         self.errors: str = errors
 
@@ -58,7 +56,7 @@ class SimplifiedCompleteResult(CompleteTestResult[SimplifiedResult]):
         }
 
 
-def read_simplified_test_data_from_json_dict(json_dict: Dict) -> SimplifiedTestData:
+def read_test_data_from_json_dict(json_dict: Dict) -> TestData:
     base_data: Any = None
     if 'baseData' in json_dict:
         base_data = json_dict['baseData']
@@ -70,7 +68,7 @@ def read_simplified_test_data_from_json_dict(json_dict: Dict) -> SimplifiedTestD
                                              single_td_json['output'])
         single_test_data.append(single_td)
 
-    return SimplifiedTestData(base_data, single_test_data)
+    return TestData(base_data, single_test_data)
 
 
 def perform_test(base_data: Any, test_data: SingleSimplifiedTestData) -> SimplifiedResult:
@@ -97,7 +95,7 @@ def perform_test(base_data: Any, test_data: SingleSimplifiedTestData) -> Simplif
     return SimplifiedResult(test_data.id, test_input, awaited_output, gotten_output, success, test_stdout.getvalue())
 
 
-def main_test(complete_test_data: SimplifiedTestData) -> List[SimplifiedResult]:
+def main_test(complete_test_data: TestData) -> List[SimplifiedResult]:
     base_data = None
     if complete_test_data.base_data is not None:
         base_data = convert_base_data(complete_test_data.base_data)
@@ -111,7 +109,7 @@ def main_test(complete_test_data: SimplifiedTestData) -> List[SimplifiedResult]:
     return test_results
 
 
-def test_simplified(test_data: SimplifiedTestData) -> SimplifiedCompleteResult:
+def test_simplified(test_data: TestData) -> SimplifiedCompleteResult:
     try:
         results: List[SimplifiedResult] = main_test(test_data)
         result_type: str = 'run_through'

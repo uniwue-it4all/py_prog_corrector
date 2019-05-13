@@ -4,32 +4,12 @@ EX=${1:-ggt}
 
 SOL_FILE=${EX}/solution.py
 
-IMG_NAME=beyselein/python_prog_tester:extended
+IMG_NAME=beyselein/python_prog_tester:simple
 
-if [[ "$2" = "--extended" ]]; then
-    RES_FILE=results/${EX}_extended_result.json
-    ADDITIONAL_MOUNT="-v $(pwd)/${EX}/extended_tests.py:/data/extended_tests.py"
-
-    # make sure tests_file exists
-    if [[ ! -f ${EX}/extended_tests.py ]]; then
-        echo "The file extended_tests.py does not exist!"
-        exit 101
-    fi
-
-else
-    RES_FILE=results/${EX}_simplified_result.json
-    ADDITIONAL_MOUNT="-v $(pwd)/${EX}/test_main.py:/data/test_main.py"
-
-    # make sure that test_main exists...
-    if [[ ! -f ${EX}/test_main.py ]]; then
-        echo "The file test_main.py does not exist!"
-        exit 101
-    fi
-fi
-
-TEST_DATA_FILE=${EX}/unified_test_data.json
+docker build -t ${IMG_NAME} .
 
 # Make sure test data file exists
+TEST_DATA_FILE=${EX}/test_data.json
 if [[ ! -f ${TEST_DATA_FILE} ]]; then
     echo "The test data file ${TEST_DATA_FILE} does not exist!"
     exit 102
@@ -42,14 +22,24 @@ if [[ ! -f ${SOL_FILE} ]]; then
 fi
 
 # Create or clear result file
+RES_FILE=results/${EX}_simplified_result.json
 if [[ ! -f ${RES_FILE} ]]; then
+    mkdir results
     touch ${RES_FILE}
 else
     > ${RES_FILE}
+fi
+
+# make sure that test_main exists...
+TEST_MAIN_FILE=${EX}/test_main.py
+if [[ ! -f ${TEST_MAIN_FILE} ]]; then
+    echo "The file test_main.py does not exist!"
+    exit 101
 fi
 
 docker run -it --rm \
     -v $(pwd)/${TEST_DATA_FILE}:/data/test_data.json \
     -v $(pwd)/${SOL_FILE}:/data/solution.py \
     -v $(pwd)/${RES_FILE}:/data/result.json \
-    ${ADDITIONAL_MOUNT} ${IMG_NAME} $2
+    -v $(pwd)/${TEST_MAIN_FILE}:/data/test_main.py \
+    ${IMG_NAME} $2
