@@ -4,7 +4,7 @@ from json import load as json_load, dumps as json_dumps
 
 from jsonschema import validate
 
-from simplified_main import test_simplified, SimplifiedCompleteResult, read_test_data_from_json_dict, \
+from simplified_main import test_simplified, CompleteResult, read_test_data_from_json_dict, \
     TestData
 
 # Load json schema
@@ -24,7 +24,7 @@ validate(complete_test_data, test_data_schema)
 
 simplified_test_data: TestData = read_test_data_from_json_dict(complete_test_data)
 
-test_result: SimplifiedCompleteResult = test_simplified(simplified_test_data)
+test_result: CompleteResult = test_simplified(simplified_test_data)
 
 # write results
 result_file_name: str = 'result.json'

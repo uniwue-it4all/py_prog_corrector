@@ -33,8 +33,8 @@ class SimplifiedResult:
 
     def to_json_dict(self) -> Dict:
         return {
-            "testId": self.test_id,
-            "testInput": self.test_input,
+            "id": self.test_id,
+            "input": self.test_input,
             "awaited": self.awaited,
             "gotten": self.gotten,
             "success": self.success,
@@ -42,7 +42,7 @@ class SimplifiedResult:
         }
 
 
-class SimplifiedCompleteResult:
+class CompleteResult:
     def __init__(self, results: List[SimplifiedResult], result_type: str, errors: str):
         self.results: List[SimplifiedResult] = results
         self.result_type: str = result_type
@@ -109,7 +109,7 @@ def main_test(complete_test_data: TestData) -> List[SimplifiedResult]:
     return test_results
 
 
-def test_simplified(test_data: TestData) -> SimplifiedCompleteResult:
+def test_simplified(test_data: TestData) -> CompleteResult:
     try:
         results: List[SimplifiedResult] = main_test(test_data)
         result_type: str = 'run_through'
@@ -119,4 +119,4 @@ def test_simplified(test_data: TestData) -> SimplifiedCompleteResult:
         result_type = 'syntax_error'
         errors = traceback_format_exc()
 
-    return SimplifiedCompleteResult(results, result_type, errors)
+    return CompleteResult(results, result_type, errors)
