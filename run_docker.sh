@@ -4,16 +4,14 @@ EX=${1:?"Error: exercise folder is not defined!"}
 
 if [[ ${EX} == */ ]]; then
     EX=${EX::-1}
-    echo ${EX}
 fi
 
 SOL_FILE_NAME=${EX}.py
 
 IMG_NAME=beyselein/python_prog_tester:simple
 
-if [[ false ]]; then
-    docker build -t ${IMG_NAME} .
-fi
+# Build image?
+#docker build -t ${IMG_NAME} .
 
 # Make sure test data file exists
 TEST_DATA_FILE=${EX}/test_data.json
