@@ -1,6 +1,6 @@
 from typing import List
 
-from solution import longest_string
+from longest_string import longest_string
 
 
 def convert_base_data(json_base_data):

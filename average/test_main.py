@@ -1,6 +1,6 @@
 from typing import Any, Tuple, Optional, List
 
-from solution import average
+from average import average
 
 epsilon = 1e-3
 

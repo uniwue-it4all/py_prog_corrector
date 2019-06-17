@@ -1,6 +1,6 @@
 from typing import List, Any, Tuple
 
-from solution import ggt
+from ggt import ggt
 
 
 def convert_base_data(json_base_data):

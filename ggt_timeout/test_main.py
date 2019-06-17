@@ -1,4 +1,4 @@
-from solution import ggt
+from ggt_timeout import ggt
 
 
 def convert_base_data(json_base_data):

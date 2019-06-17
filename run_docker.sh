@@ -2,11 +2,18 @@
 
 EX=${1:?"Error: exercise folder is not defined!"}
 
-SOL_FILE=${EX}/solution.py
+if [[ ${EX} == */ ]]; then
+    EX=${EX::-1}
+    echo ${EX}
+fi
+
+SOL_FILE_NAME=${EX}.py
 
 IMG_NAME=beyselein/python_prog_tester:simple
 
-docker build -t ${IMG_NAME} .
+if [[ false ]]; then
+    docker build -t ${IMG_NAME} .
+fi
 
 # Make sure test data file exists
 TEST_DATA_FILE=${EX}/test_data.json
@@ -16,15 +23,15 @@ if [[ ! -f ${TEST_DATA_FILE} ]]; then
 fi
 
 # Make sure solution file exists
-if [[ ! -f ${SOL_FILE} ]]; then
-    echo "The solution file ${SOL_FILE} does not exist!"
+if [[ ! -f ${EX}/${SOL_FILE_NAME} ]]; then
+    echo "The solution file ${EX}/${SOL_FILE_NAME} does not exist!"
     exit 103
 fi
 
 # Create or clear result file
 RES_FILE=results/${EX}_simplified_result.json
 if [[ ! -f ${RES_FILE} ]]; then
-    mkdir results
+    mkdir -p results
     touch ${RES_FILE}
 else
     > ${RES_FILE}
@@ -39,7 +46,7 @@ fi
 
 docker run -it --rm \
     -v $(pwd)/${TEST_DATA_FILE}:/data/test_data.json \
-    -v $(pwd)/${SOL_FILE}:/data/solution.py \
+    -v $(pwd)/${EX}/${SOL_FILE_NAME}:/data/${SOL_FILE_NAME} \
     -v $(pwd)/${RES_FILE}:/data/result.json \
     -v $(pwd)/${TEST_MAIN_FILE}:/data/test_main.py \
     ${IMG_NAME}
