@@ -1,22 +1,17 @@
 #!/usr/bin/env python3
-
 from json import load as json_load, dumps as json_dumps
+from typing import List
 
+# noinspection Mypy
 from jsonschema import validate
 
-from simplified_main import test_simplified, CompleteResult, read_test_data_from_json_dict, \
-    TestData
+from simplified_main import test_simplified, read_test_data_from_json_dict, TestData, SimplifiedResult
 
-# Load json schema
-test_data_schema_file_name: str = 'test_data.schema.json'
-
-with open(test_data_schema_file_name, 'r') as test_data_schema_file:
+# read json schema and test config from json files
+with open('test_data.schema.json', 'r') as test_data_schema_file:
     test_data_schema = json_load(test_data_schema_file)
 
-# Read test config from json file
-test_data_file_name: str = 'test_data.json'
-
-with open(test_data_file_name, 'r') as test_data_file:
+with open('test_data.json', 'r') as test_data_file:
     complete_test_data = json_load(test_data_file)
 
 # validate test data against json schema (raises exception if not successful...)
@@ -24,10 +19,8 @@ validate(complete_test_data, test_data_schema)
 
 simplified_test_data: TestData = read_test_data_from_json_dict(complete_test_data)
 
-test_result: CompleteResult = test_simplified(simplified_test_data)
+test_result: List[SimplifiedResult] = test_simplified(simplified_test_data)
 
 # write results
-result_file_name: str = 'result.json'
-
-with open(result_file_name, 'w') as result_file:
-    result_file.write(json_dumps(test_result.to_json_dict(), indent=2))
+with open('result.json', 'w') as result_file:
+    result_file.write(json_dumps([t.to_json_dict() for t in test_result]))

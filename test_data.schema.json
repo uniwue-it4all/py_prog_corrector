@@ -1,34 +1,28 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
-  "properties": {
-    "baseData": {},
-    "testData": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/SingleSimplifiedTestData"
-      }
-    }
-  },
-  "required": [
-    "testData"
-  ],
-  "additionalProperties": false,
+  "$ref": "#/definitions/TestData",
   "definitions": {
+    "TestData": {
+      "type": "object",
+      "properties": {
+        "baseData": {},
+        "testData": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/SingleSimplifiedTestData"}
+        }
+      },
+      "required": ["testData"],
+      "additionalProperties": false
+    },
     "SingleSimplifiedTestData": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "number"
-        },
+        "id": {"type": "number"},
         "input": {},
         "output": {}
       },
-      "required": [
-        "id",
-        "input",
-        "output"
-      ]
+      "required": ["id", "input", "output"],
+      "additionalProperties": false
     }
   }
 }

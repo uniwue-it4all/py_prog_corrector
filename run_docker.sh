@@ -8,7 +8,7 @@ fi
 
 SOL_FILE_NAME=${EX}.py
 
-IMG_NAME=beyselein/python_prog_tester:simple
+IMG_NAME=beyselein/py_simplified_prog_corrector:0.2.0
 
 # Build image?
 #docker build -t ${IMG_NAME} .
