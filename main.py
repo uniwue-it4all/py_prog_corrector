@@ -23,4 +23,8 @@ test_result: List[SimplifiedResult] = test_simplified(simplified_test_data)
 
 # write results
 with open('result.json', 'w') as result_file:
-    result_file.write(json_dumps([t.to_json_dict() for t in test_result]))
+    result_file.write(
+        json_dumps(
+            [t.to_json_dict() for t in test_result]
+        )
+    )

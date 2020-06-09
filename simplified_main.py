@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import sys
 from dataclasses import dataclass
 from io import StringIO
@@ -33,12 +32,12 @@ class SimplifiedResult:
 
     def to_json_dict(self) -> Dict:
         return {
-            "id": self.test_id,
-            "input": self.test_input,
-            "awaited": self.awaited,
-            "gotten": self.gotten,
-            "success": self.success,
-            "stdout": self.stdout
+            'id': self.test_id,
+            'input': self.test_input,
+            'awaited': self.awaited,
+            'gotten': self.gotten,
+            'success': self.success,
+            'stdout': self.stdout
         }
 
 
