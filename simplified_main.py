@@ -1,5 +1,4 @@
 import sys
-from dataclasses import dataclass
 from io import StringIO
 from traceback import format_exc as traceback_format_exc
 from typing import List, Any, Dict
@@ -7,38 +6,7 @@ from typing import List, Any, Dict
 # noinspection PyUnresolvedReferences,Mypy
 from test_main import test, convert_base_data, convert_test_input
 
-
-@dataclass()
-class SingleSimplifiedTestData:
-    id: int
-    input: List[Any]
-    output: Any
-
-
-@dataclass()
-class TestData:
-    base_data: Any
-    single_test_data: List[SingleSimplifiedTestData]
-
-
-@dataclass()
-class SimplifiedResult:
-    test_id: int
-    test_input: Any
-    awaited: Any
-    gotten: Any
-    success: str
-    stdout: str
-
-    def to_json_dict(self) -> Dict:
-        return {
-            'id': self.test_id,
-            'input': self.test_input,
-            'awaited': self.awaited,
-            'gotten': self.gotten,
-            'success': self.success,
-            'stdout': self.stdout
-        }
+from model import SingleSimplifiedTestData, TestData, SimplifiedResult, CompleteSimplifiedResult
 
 
 def read_test_data_from_json_dict(json_dict: Dict) -> TestData:
@@ -80,7 +48,7 @@ def __perform_test__(base_data: Any, test_data: SingleSimplifiedTestData) -> Sim
     return SimplifiedResult(test_data.id, test_input, awaited_output, gotten_output, success, test_stdout.getvalue())
 
 
-def test_simplified(complete_test_data: TestData) -> List[SimplifiedResult]:
+def test_simplified(complete_test_data: TestData) -> CompleteSimplifiedResult:
     base_data = None
     if complete_test_data.base_data is not None:
         base_data = convert_base_data(complete_test_data.base_data)
@@ -91,4 +59,4 @@ def test_simplified(complete_test_data: TestData) -> List[SimplifiedResult]:
         single_result: SimplifiedResult = __perform_test__(base_data, test_data)
         test_results.append(single_result)
 
-    return test_results
+    return CompleteSimplifiedResult(test_results)
