@@ -1,48 +1,63 @@
 #!/usr/bin/env bash
 
-EX=${1:?"Error: exercise folder is not defined!"}
+POSITIONAL=()
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+  -t | --type)
+    TYPE="$2"
+    shift # past key
+    shift # past value
+    ;;
+  *)
+    POSITIONAL+=("$1")
+    shift
+    ;;
+  esac
+done
+
+set -- "${POSITIONAL[@]}"
+
+if [[ -z "$TYPE" ]]; then
+  echo "No type was set!"
+  exit 1
+fi
+
+EX=${1:?"Error: exercise name / folder is not defined!"}
 
 if [[ ${EX} == */ ]]; then
   EX=${EX::-1}
 fi
 
-SOL_FILE_NAME=${EX}.py
+IMG_TAG=py_${TYPE}_prog_corrector:latest
 
-IMG_VERSION=${IMG_VERSION:-latest}
-IMG_NAME=py_simplified_prog_corrector
-
-IMG_TAG=${IMG_NAME}:${IMG_VERSION}
-
-# Build image?
+# Build image
 docker build -t "${IMG_TAG}" .
 
-# Make sure test data file exists
-TEST_DATA_FILE=${EX}/test_data.json
+# check if files exist
+RES_FILE=results/${TYPE}_result_${EX}.json
+TEST_DATA_FILE=${EX}/${TYPE}_test_data.json
 
 if [[ ! -f ${TEST_DATA_FILE} ]]; then
-  echo "The test data file ${TEST_DATA_FILE} does not exist!"
+  echo "There is no test data file ${TEST_DATA_FILE}!"
   exit 102
 fi
-
-# Make sure solution file exists
-if [[ ! -f ${EX}/${SOL_FILE_NAME} ]]; then
-  echo "The solution file ${EX}/${SOL_FILE_NAME} does not exist!"
-  exit 103
-fi
-
-# Create or clear result file
-RES_FILE=results/${EX}_simplified_result.json
 
 if [[ ! -f ${RES_FILE} ]]; then
   mkdir -p results
   touch "${RES_FILE}"
 else
-  # shellcheck disable=SC2188
-  >"${RES_FILE}"
+  truncate -s 0 "${RES_FILE}"
 fi
 
-# make sure that test_main exists...
+# Make sure solution file and test_main exists
+SOL_FILE_NAME=${EX}.py
 TEST_MAIN_FILE=${EX}/test_main.py
+
+if [[ ! -f ${EX}/${SOL_FILE_NAME} ]]; then
+  echo "The solution file ${EX}/${SOL_FILE_NAME} does not exist!"
+  exit 103
+fi
 
 if [[ ! -f ${TEST_MAIN_FILE} ]]; then
   echo "The file test_main.py does not exist!"
@@ -50,10 +65,10 @@ if [[ ! -f ${TEST_MAIN_FILE} ]]; then
 fi
 
 docker run -it --rm \
-  -v "$(pwd)/${TEST_DATA_FILE}":/data/test_data.json \
+  -v "$(pwd)/${TEST_DATA_FILE}:/data/test_data.json:ro" \
+  -v "$(pwd)/${RES_FILE}:/data/result.json" \
   -v "$(pwd)/${EX}/${SOL_FILE_NAME}:/data/${SOL_FILE_NAME}" \
-  -v "$(pwd)/${RES_FILE}":/data/result.json \
-  -v "$(pwd)/${TEST_MAIN_FILE}":/data/test_main.py \
-  ${IMG_NAME}
+  -v "$(pwd)/${TEST_MAIN_FILE}:/data/test_main.py" \
+  "${IMG_TAG}"
 
 # cat "${RES_FILE}"

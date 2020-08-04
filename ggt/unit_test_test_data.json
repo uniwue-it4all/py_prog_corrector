@@ -1,0 +1,52 @@
+{
+  "folderName": "ggt",
+  "filename": "ggt",
+  "testFilename": "test_ggt",
+  "testConfigs": [
+    {
+      "id": 0,
+      "shouldFail": false,
+      "description": ""
+    },
+    {
+      "id": 1,
+      "shouldFail": true,
+      "description": ""
+    },
+    {
+      "id": 2,
+      "shouldFail": true,
+      "description": ""
+    },
+    {
+      "id": 3,
+      "shouldFail": true,
+      "description": ""
+    },
+    {
+      "id": 4,
+      "shouldFail": true,
+      "description": ""
+    },
+    {
+      "id": 5,
+      "shouldFail": true,
+      "description": ""
+    },
+    {
+      "id": 6,
+      "shouldFail": true,
+      "description": ""
+    },
+    {
+      "id": 7,
+      "shouldFail": true,
+      "description": ""
+    },
+    {
+      "id": 8,
+      "shouldFail": true,
+      "description": ""
+    }
+  ]
+}
