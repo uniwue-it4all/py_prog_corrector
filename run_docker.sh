@@ -7,13 +7,7 @@ while [[ $# -gt 0 ]]; do
   -t | --type)
     value="$2"
     case $value in
-    simplified)
-      TYPE="$value"
-      ;;
-    unit_test)
-      TYPE="$value"
-      ;;
-    normal)
+    simplified | unit_test | normal)
       TYPE="$value"
       ;;
     *)
@@ -44,7 +38,7 @@ if [[ ${EX} == */ ]]; then
   EX=${EX::-1}
 fi
 
-IMG_TAG=py_${TYPE}_prog_corrector:latest
+IMG_TAG=py_prog_corrector:latest
 
 # Build image
 docker build -t "${IMG_TAG}" .
@@ -90,7 +84,8 @@ unit_test)
   -v $(pwd)/${EX}/:/data/${EX}"
   ;;
 normal)
-  MOUNTS=""
+  MOUNTS="\
+  -v $(pwd)/${EX}/:/data/${EX}"
   ;;
 esac
 
@@ -98,10 +93,8 @@ docker_command="
 docker run -it --rm \
   -v $(pwd)/${TEST_DATA_FILE}:/data/test_data.json:ro \
   -v $(pwd)/${RES_FILE}:/data/result.json ${MOUNTS} \
-  ${IMG_TAG}
+  ${IMG_TAG} ${TYPE}
 "
-
-echo "$docker_command"
 
 eval "$docker_command"
 

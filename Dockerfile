@@ -1,5 +1,16 @@
-FROM ls6uniwue/py_correction_base_image
+FROM python:3-alpine
 
-COPY *entrypoint.sh *.py *.schema.json /data/
+LABEL maintainer="b.eyselein@gmail.com"
+
+ARG WORKDIR=/data/
+
+RUN apk update && \
+    apk upgrade && \
+    apk add bash gcc musl-dev && \
+    pip install -U pip jsonschema pylint
+
+WORKDIR ${WORKDIR}
+
+COPY .pylintrc main_entrypoint.sh *.py *.schema.json ${WORKDIR}
 
 ENTRYPOINT ["./main_entrypoint.sh"]

@@ -12,7 +12,7 @@ from unit_test_model import CompleteTestConfig, CompleteResult, UnitTestCorrecti
 # helpers
 cwd: Path = Path.cwd()
 
-test_data_schema_path = cwd / 'test_data.schema.json'
+test_data_schema_path = cwd / 'unit_test_test_data.schema.json'
 test_config_path: Path = cwd / 'test_data.json'
 result_file_path: Path = cwd / 'result.json'
 
