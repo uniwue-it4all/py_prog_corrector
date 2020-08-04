@@ -1,27 +1,12 @@
 import sys
 from io import StringIO
 from traceback import format_exc as traceback_format_exc
-from typing import List, Any, Dict
+from typing import List, Any
 
 # noinspection PyUnresolvedReferences,Mypy
 from test_main import test, convert_base_data, convert_test_input
 
-from model import SingleSimplifiedTestData, TestData, SimplifiedResult, CompleteSimplifiedResult
-
-
-def read_test_data_from_json_dict(json_dict: Dict) -> TestData:
-    single_test_data: List[SingleSimplifiedTestData] = [
-        SingleSimplifiedTestData(
-            int(single_td_json['id']),
-            single_td_json['input'],
-            single_td_json['output']
-        ) for single_td_json in json_dict['testData']
-    ]
-
-    return TestData(
-        json_dict['baseData'] if 'baseData' in json_dict else None,
-        single_test_data
-    )
+from simplified_model import SingleSimplifiedTestData, TestData, SimplifiedResult, CompleteSimplifiedResult
 
 
 def __perform_test__(base_data: Any, test_data: SingleSimplifiedTestData) -> SimplifiedResult:

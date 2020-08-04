@@ -42,14 +42,15 @@ class SimplifiedResult:
     stdout: str
 
     def to_json_dict(self) -> Dict:
-        return {
-            'id': self.test_id,
-            'input': self.test_input,
-            'awaited': self.awaited,
-            'gotten': self.gotten,
-            'success': self.success,
-            'stdout': self.stdout
-        }
+        return self.__dict__
+        # return {
+        #    'id': self.test_id,
+        #    'input': self.test_input,
+        #    'awaited': self.awaited,
+        #    'gotten': self.gotten,
+        #    'success': self.success,
+        #    'stdout': self.stdout
+        # }
 
 
 @dataclass()

@@ -56,4 +56,4 @@ docker run -it --rm \
   -v "$(pwd)/${TEST_MAIN_FILE}":/data/test_main.py \
   ${IMG_NAME}
 
-cat "${RES_FILE}"
+# cat "${RES_FILE}"
