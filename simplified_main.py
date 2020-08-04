@@ -1,47 +1,31 @@
-import sys
-from io import StringIO
-from traceback import format_exc as traceback_format_exc
-from typing import List, Any
+#!/usr/bin/env python3
+from json import load as json_load, dumps as json_dumps
 
-# noinspection PyUnresolvedReferences,Mypy
-from test_main import test, convert_base_data, convert_test_input
+# noinspection Mypy
+from jsonschema import validate, ValidationError
 
-from simplified_model import SingleSimplifiedTestData, TestData, SimplifiedResult, CompleteSimplifiedResult
+from simplified_model import CompleteSimplifiedResult
+from simplified_test import test_simplified, TestData
 
+# read json schema and test config from json files
+with open('simplified_test_data.schema.json', 'r') as test_data_schema_file:
+    test_data_schema = json_load(test_data_schema_file)
 
-def __perform_test__(base_data: Any, test_data: SingleSimplifiedTestData) -> SimplifiedResult:
-    test_input: Any = test_data.input
-    awaited_output: Any = test_data.output
+with open('test_data.json', 'r') as test_data_file:
+    complete_test_data = json_load(test_data_file)
 
-    # Convert input
-    converted_input: Any = convert_test_input(base_data, test_input)
+# validate test data against json schema (raises exception if not successful...)
+try:
+    validate(complete_test_data, test_data_schema)
+except ValidationError as e:
+    print(e)
 
-    # Redirect stdout to variable test_stdout
-    sys.stdout = test_stdout = StringIO()
+simplified_test_data: TestData = TestData.read_from_json_dict(complete_test_data)
 
-    # noinspection PyBroadException
-    try:
-        gotten_output, correctness = test(base_data, converted_input, awaited_output)
-        success = 'COMPLETE' if correctness else 'NONE'
-    except Exception:
-        gotten_output = traceback_format_exc()
-        success = 'ERROR'
+test_result: CompleteSimplifiedResult = test_simplified(simplified_test_data)
 
-    # Revert stdout to 'normal' stdout
-    sys.stdout = sys.__stdout__
-
-    return SimplifiedResult(test_data.id, test_input, awaited_output, gotten_output, success, test_stdout.getvalue())
-
-
-def test_simplified(complete_test_data: TestData) -> CompleteSimplifiedResult:
-    base_data = None
-    if complete_test_data.base_data is not None:
-        base_data = convert_base_data(complete_test_data.base_data)
-
-    test_results: List[SimplifiedResult] = []
-
-    for test_data in complete_test_data.single_test_data:
-        single_result: SimplifiedResult = __perform_test__(base_data, test_data)
-        test_results.append(single_result)
-
-    return CompleteSimplifiedResult(test_results)
+# write results
+with open('result.json', 'w') as result_file:
+    result_file.write(
+        json_dumps(test_result.to_json_dict())
+    )
