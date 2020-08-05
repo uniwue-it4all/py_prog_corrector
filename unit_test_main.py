@@ -6,7 +6,7 @@ from typing import Dict, Optional, List
 # noinspection Mypy
 from jsonschema import validate as json_validate
 
-from unit_test_main_helpers import run_test
+from unit_test_test_runner import run_test
 from unit_test_model import CompleteTestConfig, CompleteResult, UnitTestCorrectionResult, FileResult
 
 # helpers
