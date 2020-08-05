@@ -11,7 +11,7 @@ class FactorialTest(unittest.TestCase):
         self.assertEqual(15511210043330985984000000, factorial(25))
 
         with self.assertRaises(Exception):
-            factorial('0.5')
+            factorial("0.5")
 
         with self.assertRaises(Exception):
             factorial(-1)

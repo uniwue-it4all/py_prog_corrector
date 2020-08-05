@@ -12,10 +12,10 @@ class GgtTest(unittest.TestCase):
         self.assertEqual(1, ggt(664, 337))
 
         with self.assertRaises(Exception):
-            ggt('1', 1)
+            ggt("1", 1)
 
         with self.assertRaises(Exception):
-            ggt(1, '1')
+            ggt(1, "1")
 
         with self.assertRaises(Exception):
             ggt(-1, 1)

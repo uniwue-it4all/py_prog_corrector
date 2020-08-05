@@ -18,7 +18,7 @@ class Table:
         self.fields: List[str] = []
         self.data: List[List[str]] = []
 
-    def load_from_csv(self, csv_file, delimiter=';'):
+    def load_from_csv(self, csv_file, delimiter=";"):
         # reset previous attributes
         self.data = []
         self.fields = []
@@ -26,7 +26,7 @@ class Table:
         if not os.path.isfile(csv_file):
             raise Exception("File not found")
 
-        with open(csv_file, 'r', encoding="utf-8-sig") as f:
+        with open(csv_file, "r", encoding="utf-8-sig") as f:
             for idx, line in enumerate(f):
                 # remove trailing new line, split by delimiter and set to lowercase
                 line = line.rstrip("\n").lower()
@@ -43,7 +43,7 @@ class Table:
                 if is_number(entry):
                     self.data[i][j] = float(entry)
 
-    def copy(self, original_table: 'Table'):
+    def copy(self, original_table: "Table"):
         self.fields = copy.deepcopy(original_table.fields)
         self.data = copy.deepcopy(original_table.data)
 
@@ -66,5 +66,5 @@ class Table:
                 raise Exception("Data types of new row do not match old ones")
 
             # append the data
-            self.data.insert(0, row)
+            self.data[0] = row
             return True

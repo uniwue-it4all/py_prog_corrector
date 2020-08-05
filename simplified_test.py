@@ -6,10 +6,17 @@ from typing import List, Any
 # noinspection PyUnresolvedReferences,Mypy
 from test_main import test, convert_base_data, convert_test_input
 
-from simplified_model import SingleSimplifiedTestData, TestData, SimplifiedResult, CompleteSimplifiedResult
+from simplified_model import (
+    SingleSimplifiedTestData,
+    TestData,
+    SimplifiedResult,
+    CompleteSimplifiedResult,
+)
 
 
-def __perform_test__(base_data: Any, test_data: SingleSimplifiedTestData) -> SimplifiedResult:
+def __perform_test__(
+    base_data: Any, test_data: SingleSimplifiedTestData
+) -> SimplifiedResult:
     test_input: Any = test_data.input
     awaited_output: Any = test_data.output
 
@@ -22,15 +29,22 @@ def __perform_test__(base_data: Any, test_data: SingleSimplifiedTestData) -> Sim
     # noinspection PyBroadException
     try:
         gotten_output, correctness = test(base_data, converted_input, awaited_output)
-        success = 'COMPLETE' if correctness else 'NONE'
+        success = "COMPLETE" if correctness else "NONE"
     except Exception:
         gotten_output = traceback_format_exc()
-        success = 'ERROR'
+        success = "ERROR"
 
     # Revert stdout to 'normal' stdout
     sys.stdout = sys.__stdout__
 
-    return SimplifiedResult(test_data.id, test_input, awaited_output, gotten_output, success, test_stdout.getvalue())
+    return SimplifiedResult(
+        test_data.id,
+        test_input,
+        awaited_output,
+        gotten_output,
+        success,
+        test_stdout.getvalue(),
+    )
 
 
 def test_simplified(complete_test_data: TestData) -> CompleteSimplifiedResult:

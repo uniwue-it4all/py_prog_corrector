@@ -9,11 +9,9 @@ class SingleSimplifiedTestData:
     output: Any
 
     @staticmethod
-    def read_from_json_dict(json_dict: Dict) -> 'SingleSimplifiedTestData':
+    def read_from_json_dict(json_dict: Dict) -> "SingleSimplifiedTestData":
         return SingleSimplifiedTestData(
-            json_dict['id'],
-            json_dict['input'],
-            json_dict['output']
+            json_dict["id"], json_dict["input"], json_dict["output"]
         )
 
 
@@ -23,12 +21,13 @@ class TestData:
     single_test_data: List[SingleSimplifiedTestData]
 
     @staticmethod
-    def read_from_json_dict(json_dict: Dict) -> 'TestData':
+    def read_from_json_dict(json_dict: Dict) -> "TestData":
         return TestData(
-            base_data=json_dict['baseData'] if 'baseData' in json_dict else None,
+            base_data=json_dict["baseData"] if "baseData" in json_dict else None,
             single_test_data=[
-                SingleSimplifiedTestData.read_from_json_dict(single_td_json) for single_td_json in json_dict['testData']
-            ]
+                SingleSimplifiedTestData.read_from_json_dict(single_td_json)
+                for single_td_json in json_dict["testData"]
+            ],
         )
 
 
@@ -58,6 +57,4 @@ class CompleteSimplifiedResult:
     results: List[SimplifiedResult]
 
     def to_json_dict(self) -> Dict:
-        return {
-            'results': [r.to_json_dict() for r in self.results]
-        }
+        return {"results": [r.to_json_dict() for r in self.results]}
