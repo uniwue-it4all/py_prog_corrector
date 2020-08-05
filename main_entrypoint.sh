@@ -26,7 +26,7 @@ unit_test)
   timeout -s KILL 4 python unit_test_main.py "${PRETTY_PRINT}"
   ;;
 normal)
-  timeout -s KILL 2 python -m unittest discover -p "*_test.py"
+  timeout -s KILL 2 python -m unittest discover
   ;;
 *)
   echo "correction type $1 is not supported!" 1>&2

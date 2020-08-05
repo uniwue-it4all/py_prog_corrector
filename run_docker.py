@@ -71,7 +71,6 @@ result_file_path.open("w").truncate()
 exercise_folder = Path.cwd() / exercise_name
 
 if correction_type == "simplified":
-    # mount user solution and test main
     user_sol_file_name = f"{exercise_name}.py"
     user_solution_file_path = exercise_folder / user_sol_file_name
 
@@ -104,7 +103,6 @@ if correction_type == "simplified":
     ]
 
 elif correction_type == "unit_test":
-    # mount exercise files?
     solution_file_name = f"{exercise_name}.py"
     solution_file_path = exercise_folder / solution_file_name
 
@@ -151,11 +149,16 @@ elif correction_type == "unit_test":
     mount_points = default_mount_points + unit_test_solutions_mount_points
 
 elif correction_type == "normal":
-    # mount all exercise files
+    exercise_file_mounts = [
+        MountPoint(file, mount_base_path / file.name, read_only=True)
+        for file in exercise_folder.glob("*")
+        if file.is_file()
+    ]
+
     mount_points = [
         MountPoint(result_file_path.absolute(), mount_base_path / "result.json"),
-        MountPoint(exercise_folder, mount_base_path / exercise_name, read_only=True),
-    ]
+        # MountPoint(exercise_folder, mount_base_path / exercise_name, read_only=True),
+    ] + exercise_file_mounts
 
 # run correction
 mounts: str = "\n".join(mount.to_bind() for mount in mount_points)
