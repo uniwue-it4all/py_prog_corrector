@@ -8,17 +8,17 @@
                 "baseData": {},
                 "testData": {
                     "type": "array",
-                    "items": {"$ref": "#/definitions/SingleSimplifiedTestData"},
-                },
+                    "items": {"$ref": "#/definitions/SingleSimplifiedTestData"}
+                }
             },
             "required": ["testData"],
-            "additionalProperties": false,
+            "additionalProperties": false
         },
         "SingleSimplifiedTestData": {
             "type": "object",
             "properties": {"id": {"type": "number"}, "input": {}, "output": {}},
             "required": ["id", "input", "output"],
-            "additionalProperties": false,
-        },
-    },
+            "additionalProperties": false
+        }
+    }
 }

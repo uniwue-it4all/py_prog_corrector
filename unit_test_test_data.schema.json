@@ -10,11 +10,11 @@
                 "testFilename": {"type": "string"},
                 "testConfigs": {
                     "type": "array",
-                    "items": {"$ref": "#/definitions/TestConfig"},
-                },
+                    "items": {"$ref": "#/definitions/TestConfig"}
+                }
             },
             "required": ["folderName", "filename", "testFilename", "testConfigs"],
-            "additionalProperties": false,
+            "additionalProperties": false
         },
         "TestConfig": {
             "type": "object",
@@ -22,10 +22,10 @@
                 "id": {"type": "number"},
                 "shouldFail": {"type": "boolean"},
                 "description": {"type": "string"},
-                "file": {},
+                "file": {}
             },
             "required": ["id", "shouldFail", "description"],
-            "additionalProperties": false,
-        },
-    },
+            "additionalProperties": false
+        }
+    }
 }
