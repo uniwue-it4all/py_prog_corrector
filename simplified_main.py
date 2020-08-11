@@ -1,37 +1,62 @@
-#!/usr/bin/env python3
-from json import load as json_load, dumps as json_dumps
-from sys import argv
-from typing import List
+import sys
+from io import StringIO
+from json import dumps as json_dumps
+from traceback import format_exc as traceback_format_exc
+from typing import Any, List
 
-from jsonschema import validate, ValidationError
+from common_helpers import (
+    simplified_test_data_schema_path,
+    result_file_path,
+    load_parse_and_check_test_data,
+    CompleteResult,
+)
+from simplified_model import SimplifiedResult, SingleSimplifiedTestData, TestData
+from simplified_test_main import convert_base_data, test, convert_test_input
 
-from simplified_model import CompleteSimplifiedResult
-from simplified_test import test_simplified, TestData
+
+def __perform_test__(base_data: Any, test_data: SingleSimplifiedTestData) -> SimplifiedResult:
+    # Convert input
+    converted_input: Any = convert_test_input(base_data, test_data.input)
+
+    # Redirect stdout to variable test_stdout
+    sys.stdout = test_stdout = StringIO()
+
+    # noinspection PyBroadException
+    try:
+        gotten_output, correctness = test(base_data, converted_input, test_data.output)
+        success = "COMPLETE" if correctness else "NONE"
+    except Exception:
+        gotten_output = traceback_format_exc()
+        success = "ERROR"
+
+    # Revert stdout to 'normal' stdout
+    sys.stdout = sys.__stdout__
+
+    return SimplifiedResult(
+        test_data.id, test_data.input, test_data.output, gotten_output, success, test_stdout.getvalue()
+    )
+
 
 # parse cli args
-args: List[str] = argv
-if "-p" in args:
-    indent = 2
-else:
-    indent = None
+indent = 2 if "-p" in sys.argv else None
 
-# read json schema and test config from json files
-with open("simplified_test_data.schema.json", "r") as test_data_schema_file:
-    test_data_schema = json_load(test_data_schema_file)
+# load and parse test data
+file_results, loaded_json = load_parse_and_check_test_data(simplified_test_data_schema_path)
 
-with open("test_data.json", "r") as test_data_file:
-    complete_test_data = json_load(test_data_file)
+simplified_test_data: TestData = TestData.read_from_json_dict(loaded_json)
 
-# validate test data against json schema (raises exception if not successful...)
-try:
-    validate(complete_test_data, test_data_schema)
-except ValidationError as e:
-    print(e)
+converted_base_data = (
+    None if simplified_test_data.base_data is None else convert_base_data(simplified_test_data.base_data)
+)
 
-simplified_test_data: TestData = TestData.read_from_json_dict(complete_test_data)
-
-test_result: CompleteSimplifiedResult = test_simplified(simplified_test_data)
+# execute tests
+simplified_results: List[SimplifiedResult] = [
+    __perform_test__(converted_base_data, test_data) for test_data in simplified_test_data.single_test_data
+]
 
 # write results
-with open("result.json", "w") as result_file:
-    result_file.write(json_dumps(test_result.to_json_dict(), indent=indent))
+result_file_path.write_text(
+    json_dumps(
+        CompleteResult(file_results, simplified_results).to_json_dict(), indent=indent
+    )
+)
