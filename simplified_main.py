@@ -4,12 +4,7 @@ from json import dumps as json_dumps
 from traceback import format_exc as traceback_format_exc
 from typing import Any, List
 
-from common_helpers import (
-    simplified_test_data_schema_path,
-    result_file_path,
-    load_parse_and_check_test_data,
-    CompleteResult,
-)
+from common_helpers import result_file_path, load_parse_and_check_test_data, CompleteResult
 from simplified_model import SimplifiedResult, SingleSimplifiedTestData, TestData
 from simplified_test_main import convert_base_data, test, convert_test_input
 
@@ -41,7 +36,7 @@ def __perform_test__(base_data: Any, test_data: SingleSimplifiedTestData) -> Sim
 indent = 2 if "-p" in sys.argv else None
 
 # load and parse test data
-file_results, loaded_json = load_parse_and_check_test_data(simplified_test_data_schema_path)
+file_results, loaded_json = load_parse_and_check_test_data("simplified")
 
 simplified_test_data: TestData = TestData.read_from_json_dict(loaded_json)
 
@@ -55,8 +50,4 @@ simplified_results: List[SimplifiedResult] = [
 ]
 
 # write results
-result_file_path.write_text(
-    json_dumps(
-        CompleteResult(file_results, simplified_results).to_json_dict(), indent=indent
-    )
-)
+result_file_path.write_text(json_dumps(CompleteResult(file_results, simplified_results).to_json_dict(), indent=indent))

@@ -44,10 +44,13 @@ class UnitTestCorrectionResult(SingleResult):
     stderr: str
 
     def to_json_dict(self) -> Dict:
+        test_failed = self.status != 0
+
         return {
             "testId": self.test_id,
             "description": self.description,
-            "successful": (self.status == 0) != self.should_fail,
+            "testFailed": test_failed,
+            "successful": test_failed == self.should_fail,
             "stdout": self.stdout,
             "stderr": self.stderr,
         }

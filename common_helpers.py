@@ -12,9 +12,6 @@ cwd: Path = Path.cwd()
 test_data_path: Path = cwd / "test_data.json"
 result_file_path: Path = cwd / "result.json"
 
-simplified_test_data_schema_path: Path = cwd / "simplified_test_data.schema.json"
-unit_test_test_data_schema_path: Path = cwd / "unit_test_test_data.schema.json"
-
 
 @dataclass()
 class FileResult:
@@ -50,7 +47,16 @@ class CompleteResult(Generic[T]):
         }
 
 
-def load_parse_and_check_test_data(test_data_schema_path: Path) -> Tuple[List[FileResult], Dict]:
+def __schema_path_for_correction_type(correction_type: str) -> Path:
+    if correction_type == "simplified":
+        return cwd / "simplified_test_data.schema.json"
+    else:
+        return cwd / "unit_test_test_data.schema.json"
+
+
+def load_parse_and_check_test_data(correction_type: str) -> Tuple[List[FileResult], Dict]:
+    test_data_schema_path: Path = __schema_path_for_correction_type(correction_type)
+
     file_results: List[FileResult] = [
         FileResult.for_file(test_data_schema_path),
         FileResult.for_file(test_data_path),
