@@ -18,7 +18,7 @@ folder_name: str = complete_test_config.folder_name
 test_file_name: str = complete_test_config.test_file_name
 
 # read unit test file content
-test_file_path = cwd / folder_name / f"{test_file_name}.py"
+test_file_path = cwd / f"{test_file_name}.py"
 file_results.append(FileResult.for_file(test_file_path))
 
 test_file_content: Optional[str] = test_file_path.read_text()
@@ -35,23 +35,26 @@ for test_config in complete_test_config.test_configs:
     file_name = complete_test_config.file_name
 
     file_to_test_path: Path = cwd / folder_name / f"{file_name}_{test_config.id}.py"
-    file_result = FileResult.for_file(file_to_test_path)
 
+    file_result = FileResult.for_file(file_to_test_path)
+    file_results.append(file_result)
     if not file_result.exists:
-        file_results.append(file_result)
         break
 
     test_file_path: Path = cwd / folder_name / f"{test_file_name}_{test_config.id}.py"
+
     test_file_path.write_text(
-        test_file_content.replace(f"from {file_name} import", f"from {str(file_to_test_path.name)[:-3]} import", )
+        test_file_content.replace(f"from {file_name} import", f"from {str(file_to_test_path.name)[:-3]} import")
     )
 
     completed_process: CompletedProcess = subprocess_run(
         f"(cd {folder_name} && timeout 2 python -m unittest {test_file_path.name})",
-        capture_output=True, shell=True, text=True
+        capture_output=True,
+        shell=True,
+        text=True,
     )
 
-    test_file_path.unlink()
+    # test_file_path.unlink()
 
     result = UnitTestCorrectionResult(
         test_id=test_config.id,

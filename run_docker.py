@@ -123,8 +123,8 @@ elif correction_type == "unit_test":
 
     default_mount_points = [
         MountPoint(result_file_path, mount_base_path / "result.json"),
-        MountPoint(solution_file_path, mount_base_path / exercise_name / solution_file_name, read_only=True,),
-        MountPoint(test_file_path, mount_base_path / exercise_name / test_file_name),
+        MountPoint(solution_file_path, mount_base_path / solution_file_name, read_only=True,),
+        MountPoint(test_file_path, mount_base_path / test_file_name),
         MountPoint(test_data_file_path, mount_base_path / "test_data.json", read_only=True),
     ]
 
