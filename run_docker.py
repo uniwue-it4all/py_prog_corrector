@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
+from argparse import ArgumentParser, Namespace
 from dataclasses import dataclass
 from pathlib import Path
 from subprocess import run as subprocess_run
-from sys import argv, stderr
+from sys import stderr
 from typing import List, Optional
 
 
@@ -35,51 +36,28 @@ supported_correction_types: List[str] = ["simplified", "unit_test", "normal"]
 # noinspection SpellCheckingInspection
 img_tag: str = "py_prog_corrector:latest"
 
-args: List[str] = argv[1:]
-positional_args: List[str] = []
+parser = ArgumentParser()
 
-correction_type: Optional[str] = None
-build_image: bool = False
-keep_container: bool = False
-print_run_command: bool = False
-pretty_print: Optional[str] = None
+parser.add_argument(
+    "-t", "--type", dest="correction_type", choices=supported_correction_types, help="Correction Type", required=True
+)
+parser.add_argument("-p", "--pretty-print", dest="pretty_print", action="store_true", help="Pretty print result file")
+parser.add_argument(
+    "-k", "--keep-container", dest="keep_container", action="store_true", help="Keep container after run"
+)
+parser.add_argument("-b", "--build", "--build-image", dest="build_image", action="store_true", help="Build image")
+parser.add_argument("--print-command", action="store_true", help="Print run command")
+parser.add_argument("exercise_name", help="Name of the exercise folder")
 
-i: int = 0
-while i < len(args):
-    if args[i] in ["-t", "--type"]:
-        correction_type_value = args[i + 1]
+new_args: Namespace = parser.parse_args()
 
-        if correction_type_value in supported_correction_types:
-            correction_type = correction_type_value
-        else:
-            print(f"Correction type {correction_type_value} is not supported!")
-            exit(2)
-
-        i += 1
-    elif args[i] in ["-p"]:
-        pretty_print = args[i]
-    elif args[i] in ["-k", "--keep-container"]:
-        keep_container = True
-    elif args[i] in ["-b", "--build", "--build-image"]:
-        build_image = True
-    elif args[i] in ["--print-command"]:
-        print_run_command = True
-    else:
-        positional_args.append(args[i])
-
-    i += 1
-
-if correction_type is None or len(positional_args) == 0:
-    print("No correction type or exercise name was set!", file=stderr)
-    exit(1)
-
-exercise_name: str = positional_args[0]
+correction_type: Optional[str] = new_args.correction_type
 
 # remove trailing slash from exercise name
-exercise_name = exercise_name[:-1] if exercise_name.endswith("/") else exercise_name
+exercise_name = new_args.exercise_name[:-1] if new_args.exercise_name.endswith("/") else new_args.exercise_name
 
 # build docker image...
-if build_image:
+if new_args.build_image:
     subprocess_run(f"docker build -t {img_tag} .", shell=True, check=True)
 
 mount_base_path = Path("/data")
@@ -123,7 +101,7 @@ elif correction_type == "unit_test":
 
     default_mount_points = [
         MountPoint(result_file_path, mount_base_path / "result.json"),
-        MountPoint(solution_file_path, mount_base_path / solution_file_name, read_only=True,),
+        MountPoint(solution_file_path, mount_base_path / solution_file_name, read_only=True, ),
         MountPoint(test_file_path, mount_base_path / test_file_name),
         MountPoint(test_data_file_path, mount_base_path / "test_data.json", read_only=True),
     ]
@@ -146,18 +124,18 @@ elif correction_type == "normal":
     ]
 
     mount_points = [
-        MountPoint(result_file_path.absolute(), mount_base_path / "result.json"),
-        # MountPoint(exercise_folder, mount_base_path / exercise_name, read_only=True),
-    ] + exercise_file_mounts
+                       MountPoint(result_file_path.absolute(), mount_base_path / "result.json"),
+                       # MountPoint(exercise_folder, mount_base_path / exercise_name, read_only=True),
+                   ] + exercise_file_mounts
 
 # run correction
 mounts: str = "\n".join(mount.to_bind() for mount in mount_points)
-container_options = "" if keep_container else "--rm"
-options: str = pretty_print if pretty_print is not None else ""
+container_options = "" if new_args.keep_container else "--rm"
+options: str = "-p" if new_args.pretty_print is not None else ""
 
 docker_run_command = f"docker run -it {container_options}\n{mounts}\n    {img_tag} {correction_type} {options}"
 
-if print_run_command:
+if new_args.print_command:
     print(docker_run_command)
 
 run_process = subprocess_run(docker_run_command.replace("\n", ""), shell=True)
