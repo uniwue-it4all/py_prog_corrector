@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from json import load as json_load
 from pathlib import Path
 from sys import stderr
-from typing import Dict, List, Tuple, TypeVar, Generic
+from typing import TypeVar, Generic
 
 from jsonschema import validate as json_validate, ValidationError
 
@@ -18,7 +18,7 @@ class FileResult:
     file_name: str
     exists: bool
 
-    def to_json_dict(self) -> Dict:
+    def to_json_dict(self) -> dict:
         return {"file_name": self.file_name, "exists": self.exists}
 
     @staticmethod
@@ -28,7 +28,7 @@ class FileResult:
 
 class SingleResult:
     @abstractmethod
-    def to_json_dict(self) -> Dict:
+    def to_json_dict(self) -> dict:
         pass
 
 
@@ -37,10 +37,10 @@ T = TypeVar("T", bound=SingleResult)
 
 @dataclass()
 class CompleteResult(Generic[T]):
-    file_results: List[FileResult]
-    results: List[T]
+    file_results: list[FileResult]
+    results: list[T]
 
-    def to_json_dict(self) -> Dict:
+    def to_json_dict(self) -> dict:
         return {
             "fileResults": [fr.to_json_dict() for fr in self.file_results],
             "results": [r.to_json_dict() for r in self.results],
@@ -54,16 +54,16 @@ def __schema_path_for_correction_type(correction_type: str) -> Path:
         return cwd / "unit_test_test_data.schema.json"
 
 
-def load_parse_and_check_test_data(correction_type: str) -> Tuple[List[FileResult], Dict]:
+def load_parse_and_check_test_data(correction_type: str) -> tuple[list[FileResult], dict]:
     test_data_schema_path: Path = __schema_path_for_correction_type(correction_type)
 
-    file_results: List[FileResult] = [
+    file_results: list[FileResult] = [
         FileResult.for_file(test_data_schema_path),
         FileResult.for_file(test_data_path),
         FileResult.for_file(result_file_path),
     ]
 
-    missing_files: List[FileResult] = [fr for fr in file_results if not fr.exists]
+    missing_files: list[FileResult] = [fr for fr in file_results if not fr.exists]
 
     if len(missing_files) > 0:
         print(f"Could not find all required files:", file=stderr)
@@ -77,7 +77,7 @@ def load_parse_and_check_test_data(correction_type: str) -> Tuple[List[FileResul
         test_data_schema = json_load(test_data_schema_file)
 
     with test_data_path.open("r") as test_config_file:
-        loaded_json: Dict = json_load(test_config_file)
+        loaded_json: dict = json_load(test_config_file)
 
     try:
         json_validate(instance=loaded_json, schema=test_data_schema)

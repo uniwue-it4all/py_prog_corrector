@@ -2,16 +2,15 @@ import sys
 from io import StringIO
 from json import dumps as json_dumps
 from traceback import format_exc as traceback_format_exc
-from typing import Any, List
 
 from common_helpers import result_file_path, load_parse_and_check_test_data, CompleteResult
 from simplified_model import SimplifiedResult, SingleSimplifiedTestData, TestData
 from simplified_test_main import convert_base_data, test, convert_test_input
 
 
-def __perform_test__(base_data: Any, test_data: SingleSimplifiedTestData) -> SimplifiedResult:
+def __perform_test__(base_data: any, test_data: SingleSimplifiedTestData) -> SimplifiedResult:
     # Convert input
-    converted_input: Any = convert_test_input(base_data, test_data.input)
+    converted_input: any = convert_test_input(base_data, test_data.input)
 
     # Redirect stdout to variable test_stdout
     sys.stdout = test_stdout = StringIO()
@@ -45,7 +44,7 @@ converted_base_data = (
 )
 
 # execute tests
-simplified_results: List[SimplifiedResult] = [
+simplified_results: list[SimplifiedResult] = [
     __perform_test__(converted_base_data, test_data) for test_data in simplified_test_data.single_test_data
 ]
 

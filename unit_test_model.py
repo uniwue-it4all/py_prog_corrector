@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import List, Dict
 
 from common_helpers import SingleResult
 
@@ -11,7 +10,7 @@ class TestConfig:
     description: str
 
     @staticmethod
-    def parse_from_json(json_object: Dict) -> "TestConfig":
+    def parse_from_json(json_object: dict) -> "TestConfig":
         return TestConfig(
             id=json_object["id"], should_fail=json_object["shouldFail"], description=json_object["description"]
         )
@@ -22,10 +21,10 @@ class CompleteTestConfig:
     folder_name: str
     file_name: str
     test_file_name: str
-    test_configs: List[TestConfig]
+    test_configs: list[TestConfig]
 
     @staticmethod
-    def parse_from_json(json_object: Dict) -> "CompleteTestConfig":
+    def parse_from_json(json_object: dict) -> "CompleteTestConfig":
         return CompleteTestConfig(
             folder_name=json_object["folderName"],
             file_name=json_object["filename"],
@@ -43,7 +42,7 @@ class UnitTestCorrectionResult(SingleResult):
     stdout: str
     stderr: str
 
-    def to_json_dict(self) -> Dict:
+    def to_json_dict(self) -> dict:
         test_failed = self.status != 0
 
         return {

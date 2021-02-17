@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from subprocess import run as subprocess_run
 from sys import stderr
-from typing import List, Optional
+from typing import Optional
 
 
 @dataclass()
@@ -26,12 +26,12 @@ def check_file_or_exit(file: Path):
         exit(101)
 
 
-def check_files_or_exit(files: List[Path]):
+def check_files_or_exit(files: list[Path]):
     for file in files:
         check_file_or_exit(file)
 
 
-supported_correction_types: List[str] = ["simplified", "unit_test", "normal"]
+supported_correction_types: list[str] = ["simplified", "unit_test", "normal"]
 
 # noinspection SpellCheckingInspection
 img_tag: str = "py_prog_corrector:latest"
@@ -61,7 +61,7 @@ if new_args.build_image:
     subprocess_run(f"docker build -t {img_tag} .", shell=True, check=True)
 
 mount_base_path = Path("/data")
-mount_points: List[MountPoint] = []
+mount_points: list[MountPoint] = []
 
 # create and clear result file
 results_folder = Path.cwd() / "results"

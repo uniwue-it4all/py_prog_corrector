@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import List, Any, Dict
 
 from common_helpers import SingleResult
 
@@ -7,21 +6,21 @@ from common_helpers import SingleResult
 @dataclass()
 class SingleSimplifiedTestData:
     id: int
-    input: List[Any]
-    output: Any
+    input: list[any]
+    output: any
 
     @staticmethod
-    def read_from_json_dict(json_dict: Dict) -> "SingleSimplifiedTestData":
+    def read_from_json_dict(json_dict: dict) -> "SingleSimplifiedTestData":
         return SingleSimplifiedTestData(json_dict["id"], json_dict["input"], json_dict["output"])
 
 
 @dataclass()
 class TestData:
-    base_data: Any
-    single_test_data: List[SingleSimplifiedTestData]
+    base_data: any
+    single_test_data: list[SingleSimplifiedTestData]
 
     @staticmethod
-    def read_from_json_dict(json_dict: Dict) -> "TestData":
+    def read_from_json_dict(json_dict: dict) -> "TestData":
         return TestData(
             base_data=json_dict["baseData"] if "baseData" in json_dict else None,
             single_test_data=[
@@ -33,13 +32,13 @@ class TestData:
 @dataclass()
 class SimplifiedResult(SingleResult):
     test_id: int
-    test_input: Any
-    awaited: Any
-    gotten: Any
+    test_input: any
+    awaited: any
+    gotten: any
     success: str
     stdout: str
 
-    def to_json_dict(self) -> Dict:
+    def to_json_dict(self) -> dict[str, any]:
         return {
             "testId": self.test_id,
             "testInput": self.test_input,
