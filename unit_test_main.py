@@ -2,15 +2,15 @@ from json import dumps as json_dumps
 from pathlib import Path
 from subprocess import CompletedProcess, run as subprocess_run
 from sys import stderr, argv
-from typing import List, Optional
+from typing import List
 
-from common_helpers import result_file_path, cwd, load_parse_and_check_test_data, CompleteResult, FileResult
+from common_helpers import result_file_path, cwd, load_parse_and_check_test_data
 from unit_test_model import CompleteTestConfig, UnitTestCorrectionResult
 
 # parse cli args
 indent = 2 if "-p" in argv else None
 
-file_results, loaded_json = load_parse_and_check_test_data("unit_test")
+loaded_json = load_parse_and_check_test_data("unit_test")
 
 complete_test_config: CompleteTestConfig = CompleteTestConfig.parse_from_json(loaded_json)
 
@@ -19,15 +19,12 @@ test_file_name: str = complete_test_config.test_file_name
 
 # read unit test file content
 test_file_path = cwd / f"{test_file_name}.py"
-file_results.append(FileResult.for_file(test_file_path))
 
-test_file_content: Optional[str] = test_file_path.read_text()
 if not test_file_path.exists():
+    print(f"File {test_file_path} does not exist!", file=stderr)
     exit(23)
 
-if test_file_content is None:
-    print(f"There is no test file {test_file_path}!", file=stderr)
-    exit(24)
+test_file_content = test_file_path.read_text()
 
 results: List[UnitTestCorrectionResult] = []
 
@@ -36,9 +33,8 @@ for test_config in complete_test_config.test_configs:
 
     file_to_test_path: Path = cwd / folder_name / f"{file_name}_{test_config.id}.py"
 
-    file_result = FileResult.for_file(file_to_test_path)
-    file_results.append(file_result)
-    if not file_result.exists:
+    if not file_to_test_path.exists:
+        print(f"File {file_to_test_path} does not exist!", file=stderr)
         break
 
     test_file_path: Path = cwd / folder_name / f"{test_file_name}_{test_config.id}.py"
@@ -67,6 +63,9 @@ for test_config in complete_test_config.test_configs:
 
     results.append(result)
 
-complete_result: CompleteResult[UnitTestCorrectionResult] = CompleteResult(file_results, results)
-
-result_file_path.write_text(json_dumps(complete_result.to_json_dict(), indent=indent))
+result_file_path.write_text(
+    json_dumps(
+        [r.to_json_dict() for r in results],
+        indent=indent
+    )
+)

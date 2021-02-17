@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 
-from common_helpers import SingleResult
-
 
 @dataclass()
 class SingleSimplifiedTestData:
@@ -30,7 +28,7 @@ class TestData:
 
 
 @dataclass()
-class SimplifiedResult(SingleResult):
+class SimplifiedResult:
     test_id: int
     test_input: any
     awaited: any

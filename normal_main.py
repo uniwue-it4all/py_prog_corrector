@@ -10,16 +10,12 @@ indent = 2 if "-p" in argv else None
 
 @dataclass()
 class NormalCorrectionResult:
-    status: int
+    successful: bool
     stdout: str
     stderr: str
 
     def to_json_dict(self) -> dict[str, any]:
-        return {
-            "status": self.status,
-            "stdout": self.stdout,
-            "stderr": self.stderr
-        }
+        return self.__dict__
 
 
 completed_process: CompletedProcess = subprocess_run(
@@ -30,7 +26,7 @@ completed_process: CompletedProcess = subprocess_run(
 )
 
 result = NormalCorrectionResult(
-    status=completed_process.returncode,
+    successful=completed_process.returncode == 0,
     stdout=completed_process.stdout[:10_000].split("\n")[:50],
     stderr=completed_process.stderr[:10_000].split("\n")[:50]
 )

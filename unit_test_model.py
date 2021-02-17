@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 
-from common_helpers import SingleResult
-
 
 @dataclass()
 class TestConfig:
@@ -34,7 +32,7 @@ class CompleteTestConfig:
 
 
 @dataclass()
-class UnitTestCorrectionResult(SingleResult):
+class UnitTestCorrectionResult:
     test_id: int
     description: str
     should_fail: bool
