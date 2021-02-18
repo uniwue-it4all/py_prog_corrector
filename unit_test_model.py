@@ -46,8 +46,8 @@ class UnitTestCorrectionResult:
         return {
             "testId": self.test_id,
             "description": self.description,
-            "testFailed": test_failed,
             "successful": test_failed == self.should_fail,
+            "shouldFail": self.should_fail,
             "stdout": self.stdout,
             "stderr": self.stderr,
         }
