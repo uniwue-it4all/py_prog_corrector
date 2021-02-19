@@ -17,6 +17,6 @@ class CompleteTestConfig(TypedDict):
 
 
 class UnitTestCorrectionResult(TestResult):
-    test_id: int
+    testId: int
     description: str
-    should_fail: bool
+    shouldFail: bool

@@ -19,7 +19,7 @@ completed_process: CompletedProcess = subprocess_run(
 )
 
 result = NormalCorrectionResult(
-    test_successful=completed_process.returncode == 0,
+    testSuccessful=completed_process.returncode == 0,
     stdout=completed_process.stdout[:10_000].split("\n")[:50],
     stderr=completed_process.stderr[:10_000].split("\n")[:50]
 )

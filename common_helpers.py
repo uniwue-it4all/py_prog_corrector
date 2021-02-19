@@ -19,7 +19,7 @@ files_to_check: list[Path] = [
 
 
 class TestResult(TypedDict):
-    test_successful: bool
+    testSuccessful: bool
     stdout: str
     stderr: bool
 

@@ -49,10 +49,10 @@ def perform_test(test_config: TestConfig) -> Optional[UnitTestCorrectionResult]:
     )
 
     return UnitTestCorrectionResult(
-        test_id=test_id,
+        testId=test_id,
         description=test_config['description'],
-        should_fail=test_config['shouldFail'],
-        test_successful=completed_process.returncode == 0,
+        shouldFail=test_config['shouldFail'],
+        testSuccessful=completed_process.returncode == 0,
         stdout=completed_process.stdout[:10_000].split("\n")[:50],
         stderr=completed_process.stderr[:10_000].split("\n")[:50],
     )
