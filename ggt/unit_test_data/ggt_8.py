@@ -21,6 +21,5 @@ def ggt(a: int, b: int) -> int:
         h: int = a
         a = b
         b = h
-        print(a, b, h)
 
     return b

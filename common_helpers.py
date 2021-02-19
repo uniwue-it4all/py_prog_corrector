@@ -1,27 +1,30 @@
 from json import load as json_load
 from pathlib import Path
 from sys import stderr
+from typing import TypedDict
 
 from jsonschema import validate as json_validate, ValidationError
 
 cwd: Path = Path.cwd()
 
+test_data_schema_path: Path = cwd / "unit_test_test_data.schema.json"
 test_data_path: Path = cwd / "test_data.json"
 result_file_path: Path = cwd / "result.json"
 
+files_to_check: list[Path] = [
+    test_data_schema_path,
+    test_data_path,
+    result_file_path
+]
 
-def __schema_path_for_correction_type__(correction_type: str) -> Path:
-    if correction_type == "simplified":
-        return cwd / "simplified_test_data.schema.json"
-    else:
-        return cwd / "unit_test_test_data.schema.json"
+
+class TestResult(TypedDict):
+    test_successful: bool
+    stdout: str
+    stderr: bool
 
 
-def load_parse_and_check_test_data(correction_type: str) -> dict:
-    test_data_schema_path: Path = __schema_path_for_correction_type__(correction_type)
-
-    files_to_check: list[Path] = [test_data_schema_path, test_data_path, result_file_path]
-
+def load_parse_and_check_test_data() -> dict:
     missing_files: list[Path] = [fr for fr in files_to_check if not fr.exists()]
 
     if len(missing_files) > 0:

@@ -31,7 +31,7 @@ def check_files_or_exit(files: list[Path]):
         check_file_or_exit(file)
 
 
-supported_correction_types: list[str] = ["simplified", "unit_test", "normal"]
+supported_correction_types: list[str] = ["unit_test", "normal"]
 
 # noinspection SpellCheckingInspection
 img_tag: str = "py_prog_corrector:latest"
@@ -74,21 +74,7 @@ result_file_path.open("w").truncate()
 
 exercise_folder = Path.cwd() / exercise_name
 
-if correction_type == "simplified":
-    user_solution_file_path = exercise_folder / f"{exercise_name}.py"
-    test_main_file_path = exercise_folder / "simplified_test_data" / "simplified_test_main.py"
-    test_data_file_path = exercise_folder / "simplified_test_data" / "simplified_test_data.json"
-
-    check_files_or_exit([user_solution_file_path, test_main_file_path, test_data_file_path])
-
-    mount_points = [
-        MountPoint(result_file_path, mount_base_path / "result.json"),
-        MountPoint(user_solution_file_path, mount_base_path / f"{exercise_name}.py", read_only=True),
-        MountPoint(test_main_file_path, mount_base_path / "simplified_test_main.py", read_only=True),
-        MountPoint(test_data_file_path, mount_base_path / "test_data.json", read_only=True),
-    ]
-
-elif correction_type == "unit_test":
+if correction_type == "unit_test":
     solution_file_name = f"{exercise_name}.py"
     solution_file_path = exercise_folder / solution_file_name
 

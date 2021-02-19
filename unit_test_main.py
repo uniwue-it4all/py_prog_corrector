@@ -2,42 +2,40 @@ from json import dumps as json_dumps
 from pathlib import Path
 from subprocess import CompletedProcess, run as subprocess_run
 from sys import stderr, argv
-from typing import List
+from typing import List, Optional
 
 from common_helpers import result_file_path, cwd, load_parse_and_check_test_data
-from unit_test_model import CompleteTestConfig, UnitTestCorrectionResult
+from unit_test_model import CompleteTestConfig, UnitTestCorrectionResult, TestConfig
 
 # parse cli args
-indent = 2 if "-p" in argv else None
+indent: Optional[int] = 2 if "-p" in argv else None
 
-loaded_json = load_parse_and_check_test_data("unit_test")
+complete_test_config: CompleteTestConfig = load_parse_and_check_test_data()
 
-complete_test_config: CompleteTestConfig = CompleteTestConfig.parse_from_json(loaded_json)
-
-folder_name: str = complete_test_config.folder_name
-test_file_name: str = complete_test_config.test_file_name
+file_name: str = complete_test_config['filename']
+folder_name: str = complete_test_config['folderName']
+test_file_name: str = complete_test_config['testFilename']
 
 # read unit test file content
-test_file_path = cwd / f"{test_file_name}.py"
+main_test_file_path: Path = cwd / f"{test_file_name}.py"
 
-if not test_file_path.exists():
-    print(f"File {test_file_path} does not exist!", file=stderr)
+if not main_test_file_path.exists():
+    print(f"File {main_test_file_path} does not exist!", file=stderr)
     exit(23)
 
-test_file_content = test_file_path.read_text()
+test_file_content: str = main_test_file_path.read_text()
 
-results: List[UnitTestCorrectionResult] = []
 
-for test_config in complete_test_config.test_configs:
-    file_name = complete_test_config.file_name
+def perform_test(test_config: TestConfig) -> Optional[UnitTestCorrectionResult]:
+    test_id: int = test_config['id']
 
-    file_to_test_path: Path = cwd / folder_name / f"{file_name}_{test_config.id}.py"
+    file_to_test_path: Path = cwd / folder_name / f"{file_name}_{test_id}.py"
 
     if not file_to_test_path.exists:
         print(f"File {file_to_test_path} does not exist!", file=stderr)
-        break
+        return None
 
-    test_file_path: Path = cwd / folder_name / f"{test_file_name}_{test_config.id}.py"
+    test_file_path: Path = cwd / folder_name / f"{test_file_name}_{test_id}.py"
 
     test_file_path.write_text(
         test_file_content.replace(f"from {file_name} import", f"from {str(file_to_test_path.name)[:-3]} import")
@@ -50,22 +48,20 @@ for test_config in complete_test_config.test_configs:
         text=True,
     )
 
-    # test_file_path.unlink()
-
-    result = UnitTestCorrectionResult(
-        test_id=test_config.id,
-        description=test_config.description,
-        should_fail=test_config.should_fail,
-        status=completed_process.returncode,
+    return UnitTestCorrectionResult(
+        test_id=test_id,
+        description=test_config['description'],
+        should_fail=test_config['shouldFail'],
+        test_successful=completed_process.returncode == 0,
         stdout=completed_process.stdout[:10_000].split("\n")[:50],
         stderr=completed_process.stderr[:10_000].split("\n")[:50],
     )
 
-    results.append(result)
+
+results: List[UnitTestCorrectionResult] = [
+    perform_test(test_config) for test_config in complete_test_config['testConfigs']
+]
 
 result_file_path.write_text(
-    json_dumps(
-        [r.to_json_dict() for r in results],
-        indent=indent
-    )
+    json_dumps(results, indent=indent)
 )
