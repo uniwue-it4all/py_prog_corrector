@@ -10,10 +10,12 @@ from unit_test_model import CompleteTestConfig, UnitTestCorrectionResult, TestCo
 # parse cli args
 indent: Optional[int] = 2 if "-p" in argv else None
 
+# consts
+folder_name: str = 'app_under_test'
+
 complete_test_config: CompleteTestConfig = load_parse_and_check_test_data()
 
 file_name: str = complete_test_config['filename']
-folder_name: str = complete_test_config['folderName']
 test_file_name: str = complete_test_config['testFilename']
 
 # read unit test file content

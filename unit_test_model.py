@@ -10,7 +10,6 @@ class TestConfig(TypedDict):
 
 
 class CompleteTestConfig(TypedDict):
-    folderName: str
     filename: str
     testFilename: str
     testConfigs: list[TestConfig]

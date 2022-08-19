@@ -3,6 +3,9 @@
 POSITIONALS=()
 PRETTY_PRINT=""
 
+ls -alR
+#> file_list.txt
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
   -p)
